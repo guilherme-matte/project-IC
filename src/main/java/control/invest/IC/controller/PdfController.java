@@ -106,7 +106,6 @@ public class PdfController {
 
             response.put("dados", dados);
             response.put("rendimento", rendimentos);
-            response.put("exclusivos",rendimentosExclusivos);
             response.put("rendimentosIsentos",rendimentosIsentos);
             response.put("rendimentosAcumulados",rendimentosAcumulados);
             response.put("rendimentosExclusivos", rendimentosExclusivos);
