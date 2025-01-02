@@ -62,8 +62,11 @@ public class StringExtractService {
 
             String[] lines = splitLines(text);
 
-    Pattern pattern = Pattern.compile("")//Criar regex
+    Pattern pattern = Pattern.compile("");//Criar regex
+        }catch (Exception e){
+
         }
+            return null;
     }
 
     public IrpfModel extrairValores(String text) {
