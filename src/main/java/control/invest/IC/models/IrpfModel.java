@@ -39,7 +39,7 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
 
     // rendimentos exclusivos
     private double decTercSal;
-    private double impRendDecTerc;
+    private double impRetDecTerc;
     private double outrosRendExclusivo;
 
 
@@ -216,12 +216,12 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
         this.decTercSal = decTercSal;
     }
 
-    public double getImpRendDecTerc() {
-        return impRendDecTerc;
+    public double getImpRetDecTerc() {
+        return impRetDecTerc;
     }
 
-    public void setImpRendDecTerc(double impRendDecTerc) {
-        this.impRendDecTerc = impRendDecTerc;
+    public void setImpRetDecTerc(double impRetDecTerc) {
+        this.impRetDecTerc = impRetDecTerc;
     }
 
     public double getOutrosRendExclusivo() {

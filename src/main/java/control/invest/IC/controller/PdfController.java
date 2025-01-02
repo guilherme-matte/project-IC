@@ -58,23 +58,43 @@ public class PdfController {
 
             irpfModel = stringExtractService.extrairValores(extractedValor);
             Map<String, Object> rendimentos = new HashMap<>();
-            Map<String, Object> deducoes = new HashMap<>();
+            Map<String, Object> rendimentosIsentos = new HashMap<>();
+            Map<String, Object> rendimentosExclusivos = new HashMap<>();
+            Map<String, Object> rendimentosAcumulados = new HashMap<>();
+            Map<String, Object> pagamentosEfetuados = new HashMap<>();
             Map<String, Object> dados = new HashMap<>();
             Map<String, Object> response = new HashMap<>();
 
 
             if (irpfModel != null) {
-
+                //rendimentos isentos e deduções
                 rendimentos.put("rendimentosTotais", irpfModel.getRendimentosTotais());
-                rendimentos.put("prevSocial", irpfModel.getPrevSocial());
-                rendimentos.put("impostoRetido", irpfModel.getImpostoRetido());
+                rendimentos.put("prevSocial", irpfModel.getPrevSocial());//dedução
+                rendimentos.put("impostoRetido", irpfModel.getImpostoRetido());//recebe este valor de volta no final do calculo, não entra como dedução
                 rendimentos.put("decTercSal", irpfModel.getDecTercSal());
-                rendimentos.put("impRendDecTerc", irpfModel.getImpRendDecTerc());
+                rendimentos.put("impRendDecTerc", irpfModel.getImpRetDecTerc());
 
-                deducoes.put("pensao", irpfModel.getPensao());
-                deducoes.put("cnpjPagDedutivel", irpfModel.getCnpjEmpresaPagDedutivel());
-                deducoes.put("nomeEmpresaPagDedutivel", irpfModel.getValorEmpresaPagDedutivel());
-                deducoes.put("valorEmpresaPagDedutivel", irpfModel.getValorEmpresaPagDedutivel());
+                //rendimentos isentos
+                rendimentosIsentos.put("parcIsentaApos", irpfModel.getParcelaIsentaApos());
+                rendimentosIsentos.put("decTercApos", irpfModel.getParcelaIsentaDecTerc());
+                rendimentosIsentos.put("ajudaDeCusto", irpfModel.getAjudaCusto());
+                rendimentosIsentos.put("provApos-e-AcidenteTrabalho", irpfModel.getAcidenteTrabalho());
+                rendimentosIsentos.put("lucros-e-dividendos", irpfModel.getLucroDividendo());
+                rendimentosIsentos.put("pagamentosAoTitular", irpfModel.getPagamentosRecebidos());
+                rendimentosIsentos.put("rescisaoContratoDeTrabalho", irpfModel.getRescisao());
+                rendimentosIsentos.put("JurosDeMora", irpfModel.getJurosMora());
+                rendimentosIsentos.put("Outros", irpfModel.getOutrosRendimentosIsentos());
+                //Rendimentos Exclusivos
+                rendimentosExclusivos.put("decTercSal", irpfModel.getDecTercSal());
+                rendimentosExclusivos.put("impRetidoDecTerc", irpfModel.getImpRetDecTerc());
+                rendimentosExclusivos.put("outrosRendExclusivos", irpfModel.getOutrosRendExclusivo());
+                //rendimentos recebidos acumuladamente
+                rendimentosAcumulados.put("totalRendimentosTrib", irpfModel.getTotalRendTributavel());
+                rendimentosAcumulados.put("despesasJudiciais", irpfModel.getDespesaAcaoJud());
+                rendimentosAcumulados.put("contribPrevSocial", irpfModel.getContribPrevSocial());
+                rendimentosAcumulados.put("pensaoRecebida", irpfModel.getPensaoRecebida());
+                rendimentosAcumulados.put("impRetidoRendRec", irpfModel.getImpostoRetidoRendRec());
+                rendimentosAcumulados.put("rendIsentos", irpfModel.getRendIsentos());
             }
             irpfModel = stringExtractService.extrairCabecalho(extractedCabecalho);
             if (irpfModel != null) {
@@ -83,10 +103,13 @@ public class PdfController {
                 dados.put("cpf", irpfModel.getCpf());
                 dados.put("pessoaFisica", irpfModel.getNomePessoaFisica());
             }
-            
+
             response.put("dados", dados);
             response.put("rendimento", rendimentos);
-            response.put("deducoes", deducoes);
+            response.put("exclusivos",rendimentosExclusivos);
+            response.put("rendimentosIsentos",rendimentosIsentos);
+            response.put("rendimentosAcumulados",rendimentosAcumulados);
+            response.put("rendimentosExclusivos", rendimentosExclusivos);
 
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (IOException e) {
