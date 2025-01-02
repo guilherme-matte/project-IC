@@ -42,7 +42,6 @@ public class StringExtractService {
             valor = valor.replace(".", "").replace(",", ".");
 
 
-
             try {
                 return matcher.group();
 
@@ -53,15 +52,27 @@ public class StringExtractService {
         return null;
     }
 
+    private String[] splitLines(String text) {
+        return text.split("\\n");
+    }
+
+    public IrpfModel extrairCabecalho(String text) {
+        try {
+            IrpfModel irpfModel = new IrpfModel();
+
+            String[] lines = splitLines(text);
+
+    Pattern pattern = Pattern.compile("")//Criar regex
+        }
+    }
 
     public IrpfModel extrairValores(String text) {
         try {
             IrpfModel irpfModel = new IrpfModel();
 
-            String[] lines = text.split("\\n");
+            String[] lines = splitLines(text);
 
-            String regex = "(\\d{1,3}(?:\\.\\d{3})*,\\d{2})";
-            Pattern pattern = Pattern.compile(regex);
+            Pattern pattern = Pattern.compile("(\\d{1,3}(?:\\.\\d{3})*,\\d{2})");
 
             List<Double> extractedValues = new ArrayList<>();
 

@@ -1,31 +1,33 @@
 package control.invest.IC.services;
 
 import control.invest.IC.models.IrpfModel;
+import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class IrpfService {
 
-    public Map<String, Double> formatedJsonIrpf(IrpfModel irpfModel) {
-        Map<String, Double> campos = new HashMap<>();
-        try {
-            Field[] fields = IrpfModel.class.getDeclaredFields();
+    private String extension(String fileName) {
+        int i = fileName.lastIndexOf('.');//pega o numero do indice do utimo ponto
 
-            for (Field field : fields) {
-                field.setAccessible(true);
-                if (field.getType().equals(double.class)) {
-                    double value = (double) field.get(irpfModel);
-                    if (value > 0) {
-                        campos.put(field.getName(), value);
-                    }
-                }
-            }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Erro no acesso aos campos");
+        if (i > 0) {
+            return fileName.substring(i + 1);//Pega a primeira palavra após o ponto e retona uma string
+        } else {
+            return null;
         }
-        return campos;
+
+    }
+
+    public boolean extensionVerify(String filename) {
+        //método criado para verificar se o arquivo recebio é um pdf ou uma imagem de diversas extensões.
+        if (extension(filename).equalsIgnoreCase("pdf")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

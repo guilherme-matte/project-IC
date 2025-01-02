@@ -112,12 +112,68 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
         this.prevSocial = prevSocial;
     }
 
+    public double getFapi() {
+        return fapi;
+    }
+
+    public void setFapi(double fapi) {
+        this.fapi = fapi;
+    }
+
+    public double getPensao() {
+        return pensao;
+    }
+
+    public void setPensao(double pensao) {
+        this.pensao = pensao;
+    }
+
     public double getImpostoRetido() {
         return impostoRetido;
     }
 
     public void setImpostoRetido(double impostoRetido) {
         this.impostoRetido = impostoRetido;
+    }
+
+    public double getParcelaIsentaApos() {
+        return parcelaIsentaApos;
+    }
+
+    public void setParcelaIsentaApos(double parcelaIsentaApos) {
+        this.parcelaIsentaApos = parcelaIsentaApos;
+    }
+
+    public double getParcelaIsentaDecTerc() {
+        return parcelaIsentaDecTerc;
+    }
+
+    public void setParcelaIsentaDecTerc(double parcelaIsentaDecTerc) {
+        this.parcelaIsentaDecTerc = parcelaIsentaDecTerc;
+    }
+
+    public double getAjudaCusto() {
+        return ajudaCusto;
+    }
+
+    public void setAjudaCusto(double ajudaCusto) {
+        this.ajudaCusto = ajudaCusto;
+    }
+
+    public double getAcidenteTrabalho() {
+        return acidenteTrabalho;
+    }
+
+    public void setAcidenteTrabalho(double acidenteTrabalho) {
+        this.acidenteTrabalho = acidenteTrabalho;
+    }
+
+    public double getLucroDividendo() {
+        return lucroDividendo;
+    }
+
+    public void setLucroDividendo(double lucroDividendo) {
+        this.lucroDividendo = lucroDividendo;
     }
 
     public double getPagamentosRecebidos() {
@@ -128,12 +184,36 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
         this.pagamentosRecebidos = pagamentosRecebidos;
     }
 
+    public double getRescisao() {
+        return rescisao;
+    }
+
+    public void setRescisao(double rescisao) {
+        this.rescisao = rescisao;
+    }
+
+    public double getJurosMora() {
+        return jurosMora;
+    }
+
+    public void setJurosMora(double jurosMora) {
+        this.jurosMora = jurosMora;
+    }
+
     public double getOutrosRendimentosIsentos() {
         return outrosRendimentosIsentos;
     }
 
     public void setOutrosRendimentosIsentos(double outrosRendimentosIsentos) {
         this.outrosRendimentosIsentos = outrosRendimentosIsentos;
+    }
+
+    public double getDecTercSal() {
+        return decTercSal;
+    }
+
+    public void setDecTercSal(double decTercSal) {
+        this.decTercSal = decTercSal;
     }
 
     public double getImpRendDecTerc() {
@@ -144,12 +224,60 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
         this.impRendDecTerc = impRendDecTerc;
     }
 
-    public double getPensao() {
-        return pensao;
+    public double getOutrosRendExclusivo() {
+        return outrosRendExclusivo;
     }
 
-    public void setPensao(double pensao) {
-        this.pensao = pensao;
+    public void setOutrosRendExclusivo(double outrosRendExclusivo) {
+        this.outrosRendExclusivo = outrosRendExclusivo;
+    }
+
+    public double getTotalRendTributavel() {
+        return totalRendTributavel;
+    }
+
+    public void setTotalRendTributavel(double totalRendTributavel) {
+        this.totalRendTributavel = totalRendTributavel;
+    }
+
+    public double getDespesaAcaoJud() {
+        return despesaAcaoJud;
+    }
+
+    public void setDespesaAcaoJud(double despesaAcaoJud) {
+        this.despesaAcaoJud = despesaAcaoJud;
+    }
+
+    public double getContribPrevSocial() {
+        return contribPrevSocial;
+    }
+
+    public void setContribPrevSocial(double contribPrevSocial) {
+        this.contribPrevSocial = contribPrevSocial;
+    }
+
+    public double getPensaoRecebida() {
+        return pensaoRecebida;
+    }
+
+    public void setPensaoRecebida(double pensaoRecebida) {
+        this.pensaoRecebida = pensaoRecebida;
+    }
+
+    public double getImpostoRetidoRendRec() {
+        return impostoRetidoRendRec;
+    }
+
+    public void setImpostoRetidoRendRec(double impostoRetidoRendRec) {
+        this.impostoRetidoRendRec = impostoRetidoRendRec;
+    }
+
+    public double getRendIsentos() {
+        return rendIsentos;
+    }
+
+    public void setRendIsentos(double rendIsentos) {
+        this.rendIsentos = rendIsentos;
     }
 
     public String getCnpjEmpresaPagDedutivel() {
@@ -172,15 +300,7 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
         return valorEmpresaPagDedutivel;
     }
 
-    public void setValorEmpresaPagDedutivel(double valorEmpresaPAgDedutivel) {
-        this.valorEmpresaPagDedutivel = valorEmpresaPAgDedutivel;
-    }
-
-    public double getDecTercSal() {
-        return decTercSal;
-    }
-
-    public void setDecTercSal(double decTercSal) {
-        this.decTercSal = decTercSal;
+    public void setValorEmpresaPagDedutivel(double valorEmpresaPagDedutivel) {
+        this.valorEmpresaPagDedutivel = valorEmpresaPagDedutivel;
     }
 }
