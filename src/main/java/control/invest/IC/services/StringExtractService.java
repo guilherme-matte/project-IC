@@ -62,11 +62,29 @@ public class StringExtractService {
 
             String[] lines = splitLines(text);
 
-    Pattern pattern = Pattern.compile("");//Criar regex
-        }catch (Exception e){
+            Pattern patternCpf = Pattern.compile("\\s*(\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2})\\s+(.+)");
+            Pattern patternCnpj = Pattern.compile("\\s*(\\d{2}\\.\\d{3}\\.\\d{3}\\/\\d{4}\\-\\d{2})\\s+(.+)");
+
+            for (String line : lines) {
+                Matcher matcherCpf = patternCpf.matcher(line);
+
+                Matcher matcherCpnj = patternCnpj.matcher(line);
+
+                if (matcherCpf.find()) {
+                    irpfModel.setCpf(matcherCpf.group(1));
+                    irpfModel.setNomePessoaFisica(matcherCpf.group(2));
+                }
+
+                if (matcherCpnj.find()) {
+                    irpfModel.setFontePagadoraCnpj(matcherCpnj.group(1));
+                    irpfModel.setFontePagadoraNomeEmpresa(matcherCpnj.group(2));
+                }
+            }
+            return irpfModel;
+        } catch (Exception e) {
 
         }
-            return null;
+        return null;
     }
 
     public IrpfModel extrairValores(String text) {

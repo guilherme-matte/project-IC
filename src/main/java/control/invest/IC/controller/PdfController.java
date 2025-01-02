@@ -30,64 +30,68 @@ public class PdfController {
         this.imageToTextService = imageToTextService;
     }
 
-    @PostMapping("/irpf/extract-file")
+    @PostMapping("/irpf/extract-pdf")
     public ResponseEntity<Map<String, Object>> extractPdf(@RequestPart("file") MultipartFile file) {
         IrpfModel irpfModel = new IrpfModel();
         IrpfService irpfService = new IrpfService();
-        if (irpfService.extensionVerify(file.getName())) {
-            try {
-                File tempPdf = File.createTempFile("uploaded", ".pdf");
-                file.transferTo(tempPdf);
-                Rectangle regionValores = new Rectangle(510, 230, 70, 450);
-                List<File> imageFilesValores = pdfToImageService.convertPdfToImages(tempPdf, regionValores, "valores");
-                String extractedText = imageToTextService.extractTextFromImages(imageFilesValores);
+        //if (irpfService.extensionVerify(file.getName())) {
+        try {
+            File tempPdf = File.createTempFile("uploaded", ".pdf");
+            file.transferTo(tempPdf);
+
+            Rectangle regionValores = new Rectangle(510, 230, 70, 450);
+            List<File> imageFilesValores = pdfToImageService.convertPdfToImages(tempPdf, regionValores, "valores");
+            String extractedValor = imageToTextService.extractTextFromImages(imageFilesValores);
 
 
-                Rectangle regionCabecalho = new Rectangle(30, 125, 420, 80);
-                List<File> imageFilesCabecalho = pdfToImageService.convertPdfToImages(tempPdf, regionCabecalho, "cabecalho");
+            Rectangle regionCabecalho = new Rectangle(30, 125, 420, 80);
+            List<File> imageFilesCabecalho = pdfToImageService.convertPdfToImages(tempPdf, regionCabecalho, "cabecalho");
+            String extractedCabecalho = imageToTextService.extractTextFromImages(imageFilesCabecalho);
 
 
-                Rectangle regionPagamentos = new Rectangle(15, 655, 520, 100);
-                List<File> imageFilespagamentos = pdfToImageService.convertPdfToImages(tempPdf, regionPagamentos, "pagamentos");
+            Rectangle regionPagamentos = new Rectangle(15, 655, 520, 100);
+            List<File> imageFilespagamentos = pdfToImageService.convertPdfToImages(tempPdf, regionPagamentos, "pagamentos");
 
 
-                tempPdf.delete();
-                StringExtractService stringExtractService = new StringExtractService();
+            tempPdf.delete();
+            StringExtractService stringExtractService = new StringExtractService();
 
-                irpfModel = stringExtractService.extrairValores(extractedText);
+            irpfModel = stringExtractService.extrairValores(extractedValor);
+            Map<String, Object> rendimentos = new HashMap<>();
+            Map<String, Object> deducoes = new HashMap<>();
+            Map<String, Object> dados = new HashMap<>();
+            Map<String, Object> response = new HashMap<>();
 
-                if (irpfModel != null) {
 
-                    Map<String, Object> rendimentos = new HashMap<>();
-                    rendimentos.put("rendimentosTotais", irpfModel.getRendimentosTotais());
-                    rendimentos.put("prevSocial", irpfModel.getPrevSocial());
-                    rendimentos.put("impostoRetido", irpfModel.getImpostoRetido());
-                    rendimentos.put("decTercSal", irpfModel.getDecTercSal());
-                    rendimentos.put("impRendDecTerc", irpfModel.getImpRendDecTerc());
+            if (irpfModel != null) {
 
-                    Map<String, Object> deducoes = new HashMap<>();
-                    deducoes.put("pensao", irpfModel.getPensao());
-                    deducoes.put("cnpjPagDedutivel", irpfModel.getCnpjEmpresaPagDedutivel());
-                    deducoes.put("nomeEmpresaPagDedutivel", irpfModel.getValorEmpresaPagDedutivel());
-                    deducoes.put("valorEmpresaPagDedutivel", irpfModel.getValorEmpresaPagDedutivel());
+                rendimentos.put("rendimentosTotais", irpfModel.getRendimentosTotais());
+                rendimentos.put("prevSocial", irpfModel.getPrevSocial());
+                rendimentos.put("impostoRetido", irpfModel.getImpostoRetido());
+                rendimentos.put("decTercSal", irpfModel.getDecTercSal());
+                rendimentos.put("impRendDecTerc", irpfModel.getImpRendDecTerc());
 
-                    Map<String, Object> response = new HashMap<>();
-                    response.put("cpf", irpfModel.getCpf());
-                    response.put("nomePessoaFisica", irpfModel.getNomePessoaFisica());
-                    response.put("fontePagadora", irpfModel.getFontePagadoraNomeEmpresa());
-                    response.put("rendimentos", rendimentos);
-                    response.put("deducoes", deducoes);
-                    return ResponseEntity.status(HttpStatus.OK).body(response);
-                } else {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+                deducoes.put("pensao", irpfModel.getPensao());
+                deducoes.put("cnpjPagDedutivel", irpfModel.getCnpjEmpresaPagDedutivel());
+                deducoes.put("nomeEmpresaPagDedutivel", irpfModel.getValorEmpresaPagDedutivel());
+                deducoes.put("valorEmpresaPagDedutivel", irpfModel.getValorEmpresaPagDedutivel());
             }
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            irpfModel = stringExtractService.extrairCabecalho(extractedCabecalho);
+            if (irpfModel != null) {
+                dados.put("cnpj", irpfModel.getFontePagadoraCnpj());
+                dados.put("nomeEmpresa", irpfModel.getFontePagadoraNomeEmpresa());
+                dados.put("cpf", irpfModel.getCpf());
+                dados.put("pessoaFisica", irpfModel.getNomePessoaFisica());
+            }
+            
+            response.put("dados", dados);
+            response.put("rendimento", rendimentos);
+            response.put("deducoes", deducoes);
+
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 }
