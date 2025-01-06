@@ -67,6 +67,7 @@ public class PdfController {
 
 
             if (irpfModel != null) {
+
                 //rendimentos isentos e deduções
                 rendimentos.put("rendimentosTotais", irpfModel.getRendimentosTotais());
                 rendimentos.put("prevSocial", irpfModel.getPrevSocial());//dedução
@@ -84,10 +85,12 @@ public class PdfController {
                 rendimentosIsentos.put("rescisaoContratoDeTrabalho", irpfModel.getRescisao());
                 rendimentosIsentos.put("JurosDeMora", irpfModel.getJurosMora());
                 rendimentosIsentos.put("Outros", irpfModel.getOutrosRendimentosIsentos());
+
                 //Rendimentos Exclusivos
                 rendimentosExclusivos.put("decTercSal", irpfModel.getDecTercSal());
                 rendimentosExclusivos.put("impRetidoDecTerc", irpfModel.getImpRetDecTerc());
                 rendimentosExclusivos.put("outrosRendExclusivos", irpfModel.getOutrosRendExclusivo());
+
                 //rendimentos recebidos acumuladamente
                 rendimentosAcumulados.put("totalRendimentosTrib", irpfModel.getTotalRendTributavel());
                 rendimentosAcumulados.put("despesasJudiciais", irpfModel.getDespesaAcaoJud());
