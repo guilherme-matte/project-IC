@@ -34,7 +34,6 @@ public class PdfController {
     public ResponseEntity<Map<String, Object>> extractPdf(@RequestPart("file") MultipartFile file) {
         IrpfModel irpfModel = new IrpfModel();
         IrpfService irpfService = new IrpfService();
-        //if (irpfService.extensionVerify(file.getName())) {
         try {
             File tempPdf = File.createTempFile("uploaded", ".pdf");
             file.transferTo(tempPdf);
@@ -78,16 +77,15 @@ public class PdfController {
                 rendimentosIsentos.put("parcIsentaApos", irpfModel.getParcelaIsentaApos());
                 rendimentosIsentos.put("decTercApos", irpfModel.getParcelaIsentaDecTerc());
                 rendimentosIsentos.put("ajudaDeCusto", irpfModel.getAjudaCusto());
-                rendimentosIsentos.put("provApos-e-AcidenteTrabalho", irpfModel.getAcidenteTrabalho());
-                rendimentosIsentos.put("lucros-e-dividendos", irpfModel.getLucroDividendo());
-                rendimentosIsentos.put("pagamentosAoTitular", irpfModel.getPagamentosRecebidos());
-                rendimentosIsentos.put("rescisaoContratoDeTrabalho", irpfModel.getRescisao());
-                rendimentosIsentos.put("JurosDeMora", irpfModel.getJurosMora());
-                rendimentosIsentos.put("Outros", irpfModel.getOutrosRendimentosIsentos());
-                //Rendimentos Exclusivos
-                rendimentosExclusivos.put("decTercSal", irpfModel.getDecTercSal());
-                rendimentosExclusivos.put("impRetidoDecTerc", irpfModel.getImpRetDecTerc());
-                rendimentosExclusivos.put("outrosRendExclusivos", irpfModel.getOutrosRendExclusivo());
+                rendimentosIsentos.put("acidenteTrabalho", irpfModel.getAcidenteTrabalho());
+                rendimentosIsentos.put("dividendos", irpfModel.getLucroDividendo());
+                rendimentosIsentos.put("pagamentosTitular", irpfModel.getPagamentosRecebidos());
+                rendimentosIsentos.put("rescisaoContrato", irpfModel.getRescisao());
+                rendimentosIsentos.put("jurosMora", irpfModel.getJurosMora());
+                rendimentosIsentos.put("outrosRendimentosIsentos", irpfModel.getOutrosRendimentosIsentos());
+
+
+
                 //rendimentos recebidos acumuladamente
                 rendimentosAcumulados.put("totalRendimentosTrib", irpfModel.getTotalRendTributavel());
                 rendimentosAcumulados.put("despesasJudiciais", irpfModel.getDespesaAcaoJud());
@@ -108,7 +106,7 @@ public class PdfController {
             response.put("rendimento", rendimentos);
             response.put("rendimentosIsentos",rendimentosIsentos);
             response.put("rendimentosAcumulados",rendimentosAcumulados);
-            response.put("rendimentosExclusivos", rendimentosExclusivos);
+            //response.put("rendimentosExclusivos", rendimentosExclusivos);
 
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (IOException e) {

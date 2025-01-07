@@ -29,7 +29,7 @@ public class PdfToImageService {
             PDFRenderer pdfRenderer = new PDFRenderer(document);
             int pageCount = document.getNumberOfPages();
 
-            int dpi = 300;//ajusta a qualidade da imagem, valores maiores requerem mais tempo pra processar
+            int dpi = 600;//ajusta a qualidade da imagem, valores maiores requerem mais tempo pra processar
 
             for (int i = 0; i < pageCount; i++) {
                 float scale = dpi / 72f;
