@@ -104,16 +104,18 @@ public class PdfController {
             response.put("dados", dados);
 
             response.put("rendimento", rendimentos);
-
-            response.put("rendimentosIsentos", rendimentosIsentos);
-            response.put("rendimentosAcumulados", rendimentosAcumulados);
-            response.put("PagamentosEfetuados", pagamentosEfetuados);
             if (!pagamentos.isEmpty() && !pagamentosValores.isEmpty()) {
                 for (int i = 0; i < pagamentos.size(); i++) {
                     pagamentosEfetuados.put("pagamento " + (i + 1), pagamentos.get(i));
                     pagamentosEfetuados.put("valor " + (i + 1), pagamentosValores.get(i));
                 }
+            }else {
+                pagamentosEfetuados.put("mensagem", "Nenhum pagamento realizado!");
             }
+            response.put("rendimentosIsentos", rendimentosIsentos);
+            response.put("rendimentosAcumulados", rendimentosAcumulados);
+            response.put("PagamentosEfetuados", pagamentosEfetuados);
+
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (IOException e) {
             e.printStackTrace();
