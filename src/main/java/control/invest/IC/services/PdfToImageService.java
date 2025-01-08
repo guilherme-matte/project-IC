@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 public class PdfToImageService {
 
-    private static final String OUTPUT_DIRECTORY = "C:\\Projects\\project-IC\\IC\\img\\";
+    private static final String OUTPUT_DIRECTORY = "C:\\Projects\\project-IC\\img\\";
 
     public List<File> convertPdfToImages(File pdfFile, Rectangle region, String name) throws IOException {
         List<File> imageFiles = new ArrayList<>();
@@ -29,7 +29,7 @@ public class PdfToImageService {
             PDFRenderer pdfRenderer = new PDFRenderer(document);
             int pageCount = document.getNumberOfPages();
 
-            int dpi = 600;//ajusta a qualidade da imagem, valores maiores requerem mais tempo pra processar
+            int dpi = 300;//ajusta a qualidade da imagem, valores maiores requerem mais tempo pra processar
 
             for (int i = 0; i < pageCount; i++) {
                 float scale = dpi / 72f;

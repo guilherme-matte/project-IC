@@ -106,7 +106,6 @@ public class PdfController {
             response.put("rendimento", rendimentos);
             response.put("rendimentosIsentos",rendimentosIsentos);
             response.put("rendimentosAcumulados",rendimentosAcumulados);
-            //response.put("rendimentosExclusivos", rendimentosExclusivos);
 
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (IOException e) {
