@@ -15,9 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class PdfController {
@@ -50,19 +49,18 @@ public class PdfController {
 
             Rectangle regionPagamentos = new Rectangle(15, 655, 520, 100);
             List<File> imageFilespagamentos = pdfToImageService.convertPdfToImages(tempPdf, regionPagamentos, "pagamentos");
-
+            String extractedPagamentos = imageToTextService.extractTextFromImages(imageFilespagamentos);
 
             tempPdf.delete();
             StringExtractService stringExtractService = new StringExtractService();
 
             irpfModel = stringExtractService.extrairValores(extractedValor);
-            Map<String, Object> rendimentos = new HashMap<>();
-            Map<String, Object> rendimentosIsentos = new HashMap<>();
-            Map<String, Object> rendimentosExclusivos = new HashMap<>();
-            Map<String, Object> rendimentosAcumulados = new HashMap<>();
-            Map<String, Object> pagamentosEfetuados = new HashMap<>();
-            Map<String, Object> dados = new HashMap<>();
-            Map<String, Object> response = new HashMap<>();
+            Map<String, Object> rendimentos = new LinkedHashMap<>();
+            Map<String, Object> rendimentosIsentos = new LinkedHashMap<>();
+            Map<String, Object> rendimentosAcumulados = new LinkedHashMap<>();
+            Map<String, Object> pagamentosEfetuados = new LinkedHashMap<>();
+            Map<String, Object> dados = new LinkedHashMap<>();
+            Map<String, Object> response = new LinkedHashMap<>();
 
 
             if (irpfModel != null) {
@@ -85,7 +83,6 @@ public class PdfController {
                 rendimentosIsentos.put("outrosRendimentosIsentos", irpfModel.getOutrosRendimentosIsentos());
 
 
-
                 //rendimentos recebidos acumuladamente
                 rendimentosAcumulados.put("totalRendimentosTrib", irpfModel.getTotalRendTributavel());
                 rendimentosAcumulados.put("despesasJudiciais", irpfModel.getDespesaAcaoJud());
@@ -101,12 +98,22 @@ public class PdfController {
                 dados.put("cpf", irpfModel.getCpf());
                 dados.put("pessoaFisica", irpfModel.getNomePessoaFisica());
             }
+            ArrayList<String> pagamentos = stringExtractService.extrairPagamentos(extractedPagamentos);
+            ArrayList<Double> pagamentosValores = stringExtractService.extrairPagamentosValores(extractedPagamentos);
 
             response.put("dados", dados);
-            response.put("rendimento", rendimentos);
-            response.put("rendimentosIsentos",rendimentosIsentos);
-            response.put("rendimentosAcumulados",rendimentosAcumulados);
 
+            response.put("rendimento", rendimentos);
+
+            response.put("rendimentosIsentos", rendimentosIsentos);
+            response.put("rendimentosAcumulados", rendimentosAcumulados);
+            response.put("PagamentosEfetuados", pagamentosEfetuados);
+            if (!pagamentos.isEmpty() && !pagamentosValores.isEmpty()) {
+                for (int i = 0; i < pagamentos.size(); i++) {
+                    pagamentosEfetuados.put("pagamento " + (i + 1), pagamentos.get(i));
+                    pagamentosEfetuados.put("valor " + (i + 1), pagamentosValores.get(i));
+                }
+            }
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (IOException e) {
             e.printStackTrace();

@@ -87,6 +87,50 @@ public class StringExtractService {
         return null;
     }
 
+    public ArrayList<Double> extrairPagamentosValores(String text) {
+        try {
+            ArrayList<Double> retorno = new ArrayList<>();
+            String[] lines = splitLines(text);
+            Pattern patternValor = Pattern.compile("(\\d{1,3}(?:\\.\\d{3})*,\\d{2})");
+
+            for (String line : lines) {
+                Matcher matcherValor = patternValor.matcher(line);
+                if (matcherValor.find()) {
+                    retorno.add(Double.parseDouble(matcherValor.group().replace(".", "").replace(",", ".")));
+                }
+            }
+            return retorno;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+    public ArrayList<String> extrairPagamentos(String text) {
+        try {
+            ArrayList<String> retorno = new ArrayList<>();
+            String[] lines = splitLines(text);
+
+            Pattern patternCpf = Pattern.compile("\\s*(\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2})\\s+(.+)");
+            Pattern patternCnpj = Pattern.compile("\\s*(\\d{2}\\.\\d{3}\\.\\d{3}\\/\\d{4}\\-\\d{2})\\s+(.+)");
+
+            for (String line : lines) {
+                Matcher matcherCpf = patternCpf.matcher(line);
+                Matcher matcherCnpj = patternCnpj.matcher(line);
+                if (matcherCpf.find()) {
+                    retorno.add(matcherCpf.group(1) + " - " + matcherCpf.group(2));
+                } else if (matcherCnpj.find()) {
+                    retorno.add(matcherCnpj.group(1) + " - " + matcherCnpj.group(2));
+                }
+            }
+            return retorno;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public IrpfModel extrairValores(String text) {
         try {
             IrpfModel irpfModel = new IrpfModel();
