@@ -149,7 +149,6 @@ public class StringExtractService {
 
                     extractedValues.add(value);
 
-
                 }
             }
 
