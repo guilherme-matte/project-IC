@@ -2,6 +2,7 @@ package control.invest.IC.controller;
 
 import control.invest.IC.dtos.CalculatorDTO;
 import control.invest.IC.models.IrpfModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,17 +48,18 @@ public class IrpfCalculatorController {
     }
 
     @PostMapping("/irpf/calculator")
-    public ResponseEntity<String> calcularIrpf(@RequestBody CalculatorDTO calculatorDTO) {
+    public ResponseEntity<LinkedHashMap<String, Object>> calcularIrpf(@RequestBody CalculatorDTO calculatorDTO) {
         try {
             IrpfModel irpfModel = calculatorDTO.getIrpfModel();
             double pagamento = calculatorDTO.getPagamento();
             int dependente = calculatorDTO.getDependente();
 
             double totalDependentes = calcularDependentes(dependente);
-            double deducoes = totalDependentes + irpfModel.getContribPrevSocial() + pagamento;
             if (pagamento > 3561.50) {
                 pagamento = 3561.50;
             }
+            double deducoes = totalDependentes + irpfModel.getContribPrevSocial() + pagamento;
+
 
             double rendimentos = irpfModel.getRendimentosTotais() - deducoes;
 
@@ -88,10 +90,12 @@ public class IrpfCalculatorController {
 
             LinkedHashMap irpf = new LinkedHashMap();
 
-            irpf.put("", )
+            irpf.put("aliquota", al);
+            return ResponseEntity.status(HttpStatus.OK).body(irpf);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
 }
