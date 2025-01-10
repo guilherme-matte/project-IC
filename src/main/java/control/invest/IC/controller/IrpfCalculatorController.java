@@ -2,6 +2,7 @@ package control.invest.IC.controller;
 
 import control.invest.IC.dtos.CalculatorDTO;
 import control.invest.IC.models.IrpfModel;
+import control.invest.IC.utilities.Utilities;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +13,8 @@ import java.util.LinkedHashMap;
 
 @RestController
 public class IrpfCalculatorController {
+    Utilities utilities = new Utilities();
+
     private double calcularDependentes(int numDependente) {
         if (numDependente <= 0) {
             return 0;
@@ -55,16 +58,13 @@ public class IrpfCalculatorController {
             int dependente = calculatorDTO.getDependente();
 
             double totalDependentes = calcularDependentes(dependente);
-            if (pagamento > 3561.50) {
-                pagamento = 3561.50;
-            }
-            double deducoes = totalDependentes + irpfModel.getContribPrevSocial() + pagamento;
+
+            double deducoes = totalDependentes + irpfModel.getContribPrevSocial() + pagamento + irpfModel.getFapi();
 
 
             double rendimentos = irpfModel.getRendimentosTotais() - deducoes;
 
 
-            double parcela = 0;
             double al = 0;
             double imposto = 0;
             if (rendimentos <= 24511.92) {
@@ -72,7 +72,7 @@ public class IrpfCalculatorController {
                 imposto = calcularImposto(rendimentos);
             } else if (rendimentos >= 24511.93 && rendimentos <= 33919.80) {
                 al = 0.075;
-                parcela = 169.44;
+                imposto = calcularImposto(rendimentos);
 
             } else if (rendimentos >= 33919.81 && rendimentos <= 45012.60) {
                 al = 0.15;
@@ -88,9 +88,26 @@ public class IrpfCalculatorController {
 
             }
 
-            LinkedHashMap irpf = new LinkedHashMap();
 
-            irpf.put("aliquota", al);
+            LinkedHashMap irpf = new LinkedHashMap();
+            irpf.put("rendimento", rendimentos);
+            irpf.put("imposto", valueFormat(imposto));
+            System.out.println(imposto);
+            irpf.put("deducoes", valueFormat(deducoes));
+            System.out.println(deducoes);
+            if (imposto > irpfModel.getImpostoRetido() || imposto == irpfModel.getImpostoRetido()) {
+                irpf.put("pagar", valueFormat(imposto - irpfModel.getImpostoRetido()));
+            } else if (imposto < irpfModel.getImpostoRetido()) {
+                irpf.put("restituir", valueFormat(irpfModel.getImpostoRetido() - imposto));
+            }
+
+            if (al == 0) {
+                irpf.put("aliquota", "0%");
+            } else {
+                irpf.put("aliquota", utilities.formatarValor(al * 100) + "%");
+            }
+
+
             return ResponseEntity.status(HttpStatus.OK).body(irpf);
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,4 +115,8 @@ public class IrpfCalculatorController {
         return null;
     }
 
+    private double valueFormat(double valor) {
+
+        return Double.parseDouble(utilities.formatarValor(valor).replace(".", "").replace(",", "."));
+    }
 }

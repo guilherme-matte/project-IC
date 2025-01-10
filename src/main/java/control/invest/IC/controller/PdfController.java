@@ -47,7 +47,7 @@ public class PdfController {
             String extractedCabecalho = imageToTextService.extractTextFromImages(imageFilesCabecalho);
 
 
-            Rectangle regionPagamentos = new Rectangle(15, 655, 520, 100);
+            Rectangle regionPagamentos = new Rectangle(15, 675, 520, 100);
             List<File> imageFilespagamentos = pdfToImageService.convertPdfToImages(tempPdf, regionPagamentos, "pagamentos");
             String extractedPagamentos = imageToTextService.extractTextFromImages(imageFilespagamentos);
 

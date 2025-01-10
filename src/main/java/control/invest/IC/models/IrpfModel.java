@@ -10,7 +10,7 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
 
     //classe para fins de teste, futuramente serão adicionados outros tipos de rendimentos, caso ncessário
 
-    private UUID idIrpf;
+    //private UUID idIrpf;
 
     private String cpf;
     private String nomePessoaFisica;
@@ -56,13 +56,13 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
     private String nomeEmpresaPagDedutivel;
     private double valorEmpresaPagDedutivel;
 
-    public UUID getIdIrpf() {
-        return idIrpf;
-    }
-
-    public void setIdIrpf(UUID idIrpf) {
-        this.idIrpf = idIrpf;
-    }
+//    public UUID getIdIrpf() {
+//        return idIrpf;
+//    }
+//
+//    public void setIdIrpf(UUID idIrpf) {
+//        this.idIrpf = idIrpf;
+//    }
 
     public String getCpf() {
         return cpf;

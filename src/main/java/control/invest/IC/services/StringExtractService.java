@@ -119,9 +119,9 @@ public class StringExtractService {
                 Matcher matcherCpf = patternCpf.matcher(line);
                 Matcher matcherCnpj = patternCnpj.matcher(line);
                 if (matcherCpf.find()) {
-                    retorno.add(matcherCpf.group(1) + " - " + matcherCpf.group(2));
+                    retorno.add(matcherCpf.group(1) + " - " + matcherCpf.group(2).replaceAll("\\s\\d{1,3}(\\.\\d{3})*,\\d{2}$", ""));
                 } else if (matcherCnpj.find()) {
-                    retorno.add(matcherCnpj.group(1) + " - " + matcherCnpj.group(2));
+                    retorno.add(matcherCnpj.group(1) + " - " + matcherCnpj.group(2).replace("-", "").trim());
                 }
             }
             return retorno;
