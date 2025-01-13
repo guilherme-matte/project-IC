@@ -90,11 +90,11 @@ public class IrpfCalculatorController {
 
 
             LinkedHashMap irpf = new LinkedHashMap();
+
             irpf.put("rendimento", rendimentos);
             irpf.put("imposto", valueFormat(imposto));
-            System.out.println(imposto);
             irpf.put("deducoes", valueFormat(deducoes));
-            System.out.println(deducoes);
+
             if (imposto > irpfModel.getImpostoRetido() || imposto == irpfModel.getImpostoRetido()) {
                 irpf.put("pagar", valueFormat(imposto - irpfModel.getImpostoRetido()));
             } else if (imposto < irpfModel.getImpostoRetido()) {
