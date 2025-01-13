@@ -23,6 +23,9 @@ public class PdfController {
     private final PdfToImageService pdfToImageService;
     private final ImageToTextService imageToTextService;
 
+    private String formatarCampos(String text) {
+        return text.replaceAll("[^a-zA-Z0-9 ]", "").trim();
+    }
 
     public PdfController(PdfToImageService pdfToImageService, ImageToTextService imageToTextService) {
         this.pdfToImageService = pdfToImageService;
@@ -96,7 +99,7 @@ public class PdfController {
                 dados.put("cnpj", irpfModel.getFontePagadoraCnpj());
                 dados.put("nomeEmpresa", irpfModel.getFontePagadoraNomeEmpresa());
                 dados.put("cpf", irpfModel.getCpf());
-                dados.put("pessoaFisica", irpfModel.getNomePessoaFisica());
+                dados.put("pessoaFisica", formatarCampos(irpfModel.getNomePessoaFisica()));
             }
             ArrayList<String> pagamentos = stringExtractService.extrairPagamentos(extractedPagamentos);
             ArrayList<Double> pagamentosValores = stringExtractService.extrairPagamentosValores(extractedPagamentos);
@@ -109,7 +112,7 @@ public class PdfController {
                     pagamentosEfetuados.put("pagamento " + (i + 1), pagamentos.get(i));
                     pagamentosEfetuados.put("valor " + (i + 1), pagamentosValores.get(i));
                 }
-            }else {
+            } else {
                 pagamentosEfetuados.put("mensagem", "Nenhum pagamento realizado!");
             }
             response.put("rendimentosIsentos", rendimentosIsentos);

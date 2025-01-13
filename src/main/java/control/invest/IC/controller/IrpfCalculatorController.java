@@ -91,7 +91,7 @@ public class IrpfCalculatorController {
 
             LinkedHashMap irpf = new LinkedHashMap();
 
-            irpf.put("rendimento", rendimentos);
+            irpf.put("rendimento", valueFormat(rendimentos));
             irpf.put("imposto", valueFormat(imposto));
             irpf.put("deducoes", valueFormat(deducoes));
 
