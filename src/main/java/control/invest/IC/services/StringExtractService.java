@@ -71,8 +71,8 @@ public class StringExtractService {
                 Matcher matcherCpnj = patternCnpj.matcher(line);
 
                 if (matcherCpf.find()) {
-                    irpfModel.setCpf(matcherCpf.group(1));
-                    irpfModel.setNomePessoaFisica(matcherCpf.group(2));
+                    irpfModel.setContribuinte_id(matcherCpf.group(1));
+                    //irpfModel.setNomePessoaFisica(matcherCpf.group(2));
                 }
 
                 if (matcherCpnj.find()) {

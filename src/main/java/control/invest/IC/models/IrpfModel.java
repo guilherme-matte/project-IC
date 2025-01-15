@@ -1,19 +1,20 @@
 package control.invest.IC.models;
 
+import jakarta.persistence.*;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.util.UUID;
 
-
+@Entity
+@Table(name = "tb_irpf")
 public class IrpfModel extends RepresentationModel<IrpfModel> implements Serializable {
 
-    //classe para fins de teste, futuramente serão adicionados outros tipos de rendimentos, caso ncessário
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private UUID idIrpf;
 
-    //private UUID idIrpf;
-
-    private String cpf;
-    private String nomePessoaFisica;
+    private String contribuinte_id;
 
     private String fontePagadoraCnpj;
     private String fontePagadoraNomeEmpresa;
@@ -56,29 +57,22 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
     private String nomeEmpresaPagDedutivel;
     private double valorEmpresaPagDedutivel;
 
-//    public UUID getIdIrpf() {
-//        return idIrpf;
-//    }
-//
-//    public void setIdIrpf(UUID idIrpf) {
-//        this.idIrpf = idIrpf;
-//    }
-
-    public String getCpf() {
-        return cpf;
+    public UUID getIdIrpf() {
+        return idIrpf;
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
+    public void setIdIrpf(UUID idIrpf) {
+        this.idIrpf = idIrpf;
     }
 
-    public String getNomePessoaFisica() {
-        return nomePessoaFisica;
+    public String getContribuinte_id() {
+        return contribuinte_id;
     }
 
-    public void setNomePessoaFisica(String nomePessoaFisica) {
-        this.nomePessoaFisica = nomePessoaFisica;
+    public void setContribuinte_id(String contribuinte_id) {
+        this.contribuinte_id = contribuinte_id;
     }
+
 
     public String getFontePagadoraCnpj() {
         return fontePagadoraCnpj;
