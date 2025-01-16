@@ -1,18 +1,27 @@
 package control.invest.IC.controller;
 
 import control.invest.IC.dtos.CalculatorDTO;
+import control.invest.IC.models.ContribuinteModel;
 import control.invest.IC.models.IrpfModel;
+import control.invest.IC.repositories.ContribuinteRepository;
+import control.invest.IC.service.ContribuinteService;
 import control.invest.IC.utilities.Utilities;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
+import java.util.Optional;
 
 @RestController
 public class IrpfCalculatorController {
+    @Autowired
+    ContribuinteRepository contribuinteRepository;
+
     Utilities utilities = new Utilities();
 
     private double calcularDependentes(int numDependente) {
@@ -106,8 +115,8 @@ public class IrpfCalculatorController {
             } else {
                 irpf.put("aliquota", utilities.formatarValor(al * 100) + "%");
             }
-
-
+            ContribuinteService contribuinteService = new ContribuinteService();
+            contribuinteService.criarContribuinte(calculatorDTO.getDependenteModel(), calculatorDTO.getContribuinteModel());
             return ResponseEntity.status(HttpStatus.OK).body(irpf);
         } catch (Exception e) {
             e.printStackTrace();

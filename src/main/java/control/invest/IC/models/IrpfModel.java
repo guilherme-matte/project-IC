@@ -14,7 +14,8 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID idIrpf;
 
-    private String contribuinte_id;
+    private String cpf;
+    private String nomePessoaFisica;
 
     private String fontePagadoraCnpj;
     private String fontePagadoraNomeEmpresa;
@@ -65,12 +66,12 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
         this.idIrpf = idIrpf;
     }
 
-    public String getContribuinte_id() {
-        return contribuinte_id;
+    public String getCpf() {
+        return cpf;
     }
 
-    public void setContribuinte_id(String contribuinte_id) {
-        this.contribuinte_id = contribuinte_id;
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
 
@@ -296,5 +297,13 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
 
     public void setValorEmpresaPagDedutivel(double valorEmpresaPagDedutivel) {
         this.valorEmpresaPagDedutivel = valorEmpresaPagDedutivel;
+    }
+
+    public String getNomePessoaFisica() {
+        return nomePessoaFisica;
+    }
+
+    public void setNomePessoaFisica(String nomePessoaFisica) {
+        this.nomePessoaFisica = nomePessoaFisica;
     }
 }

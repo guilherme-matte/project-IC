@@ -98,7 +98,7 @@ public class PdfController {
             if (irpfModel != null) {
                 dados.put("cnpj", irpfModel.getFontePagadoraCnpj());
                 dados.put("nomeEmpresa", irpfModel.getFontePagadoraNomeEmpresa());
-                dados.put("cpf", irpfModel.getContribuinte_id());
+                dados.put("cpf", irpfModel.getCpf());
                 //dados.put("pessoaFisica", formatarCampos(irpfModel.getNomePessoaFisica()));
             }
             ArrayList<String> pagamentos = stringExtractService.extrairPagamentos(extractedPagamentos);
