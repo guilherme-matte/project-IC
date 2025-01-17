@@ -6,12 +6,12 @@ import org.springframework.hateoas.RepresentationModel;
 import java.io.Serializable;
 import java.util.UUID;
 
-@Entity
-@Table(name = "tb_irpf")
+
+//@Table(name = "tb_irpf")
 public class IrpfModel extends RepresentationModel<IrpfModel> implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID idIrpf;
 
     private String cpf;

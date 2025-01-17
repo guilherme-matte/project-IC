@@ -2,9 +2,11 @@ package control.invest.IC.controller;
 
 import control.invest.IC.dtos.CalculatorDTO;
 import control.invest.IC.models.ContribuinteModel;
+import control.invest.IC.models.DependenteModel;
 import control.invest.IC.models.IrpfModel;
 import control.invest.IC.repositories.ContribuinteRepository;
 import control.invest.IC.service.ContribuinteService;
+import control.invest.IC.service.DependenteService;
 import control.invest.IC.utilities.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,10 @@ import java.util.Optional;
 public class IrpfCalculatorController {
     @Autowired
     ContribuinteRepository contribuinteRepository;
+    @Autowired
+    ContribuinteService contribuinteService;
+    @Autowired
+    DependenteService dependenteService;
 
     Utilities utilities = new Utilities();
 
@@ -115,8 +121,18 @@ public class IrpfCalculatorController {
             } else {
                 irpf.put("aliquota", utilities.formatarValor(al * 100) + "%");
             }
-            ContribuinteService contribuinteService = new ContribuinteService();
-            contribuinteService.criarContribuinte(calculatorDTO.getDependenteModel(), calculatorDTO.getContribuinteModel());
+
+            if (!contribuinteService.consultaCpf(calculatorDTO.getContribuinteModel().getCpf())) {
+
+                contribuinteService.criarContribuinte(calculatorDTO.getDependenteModel(), calculatorDTO.getContribuinteModel());
+                System.out.println("Dados salvos com sucesso");
+            } else if (!dependenteService.verificaCpf(calculatorDTO.getDependenteModel().getCpf())) {
+
+                dependenteService.criarDependente(calculatorDTO.getDependenteModel(), calculatorDTO.getContribuinteModel());
+                System.out.println("Dependente salvo com sucesso");
+            }
+
+
             return ResponseEntity.status(HttpStatus.OK).body(irpf);
         } catch (Exception e) {
             e.printStackTrace();

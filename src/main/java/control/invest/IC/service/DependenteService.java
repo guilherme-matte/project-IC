@@ -16,12 +16,24 @@ public class DependenteService {
     @Autowired
     ContribuinteRepository contribuinteRepository;
 
-    public void criarDependente(DependenteModel dependenteModel, String cpf) {
-        ContribuinteModel contribuinte = contribuinteRepository.findByCpf(cpf);
-        dependenteModel.setContribuinte(contribuinte);
-        dependenteModel.setCpf(dependenteModel.getCpf());
-        dependenteModel.setNome(dependenteModel.getNome());
+    public boolean verificaCpf(String cpf) {
         try {
+            DependenteModel result = dependenteRepository.findByCpf(cpf);
+            return result != null;
+        } catch (Exception e) {
+            System.out.println("Erro ao consultar CPF DEPENDENTE: " + e.getMessage());
+            return false;
+
+        }
+    }
+
+    public void criarDependente(DependenteModel dependenteModel, ContribuinteModel contribuinteModel) {
+        try {
+            ContribuinteModel result = contribuinteRepository.findByCpf(contribuinteModel.getCpf());
+
+            dependenteModel.setContribuinte(result);
+            dependenteModel.setCpf(dependenteModel.getCpf());
+            dependenteModel.setNome(dependenteModel.getNome());
             dependenteRepository.save(dependenteModel);
         } catch (Exception e) {
             e.printStackTrace();

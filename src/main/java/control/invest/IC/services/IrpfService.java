@@ -23,7 +23,7 @@ public class IrpfService {
     }
 
     public boolean extensionVerify(String filename) {
-        //método criado para verificar se o arquivo recebio é um pdf ou uma imagem de diversas extensões.
+        //metodo criado para verificar se o arquivo recebido é um pdf ou uma imagem de diversas extensões.
         if (extension(filename).equalsIgnoreCase("pdf")) {
             return true;
         } else {
