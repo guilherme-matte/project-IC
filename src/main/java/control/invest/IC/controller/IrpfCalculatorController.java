@@ -126,7 +126,10 @@ public class IrpfCalculatorController {
 
                 contribuinteService.criarContribuinte(calculatorDTO.getDependenteModel(), calculatorDTO.getContribuinteModel());
                 System.out.println("Dados salvos com sucesso");
-            } else if (!dependenteService.verificaCpf(calculatorDTO.getDependenteModel().getCpf())) {
+            } else {
+
+            }
+            if (!dependenteService.verificaCpf(calculatorDTO.getDependenteModel().getCpf())) {
 
                 dependenteService.criarDependente(calculatorDTO.getDependenteModel(), calculatorDTO.getContribuinteModel());
                 System.out.println("Dependente salvo com sucesso");

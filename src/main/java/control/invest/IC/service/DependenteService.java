@@ -27,6 +27,15 @@ public class DependenteService {
         }
     }
 
+    public void atualizarDependente(DependenteModel dependenteModel, ContribuinteModel contribuinteModel) {
+        try {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Erro ao atualizar dependente: " + dependenteModel.getCpf() + " - " + e.getMessage());
+        }
+    }
+
     public void criarDependente(DependenteModel dependenteModel, ContribuinteModel contribuinteModel) {
         try {
             ContribuinteModel result = contribuinteRepository.findByCpf(contribuinteModel.getCpf());
