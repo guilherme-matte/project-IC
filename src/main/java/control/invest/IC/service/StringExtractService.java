@@ -1,4 +1,4 @@
-package control.invest.IC.services;
+package control.invest.IC.service;
 
 import control.invest.IC.models.IrpfModel;
 import org.springframework.stereotype.Service;

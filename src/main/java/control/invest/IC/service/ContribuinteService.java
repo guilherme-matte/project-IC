@@ -28,14 +28,7 @@ public class ContribuinteService {
             return false;
         }
     }
-public void atualizarContribuinte (DependenteModel dependenteModel, ContribuinteModel contribuinteModel){
-        try {
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Erro ao atualizar contribuinte: "+contribuinteModel.getCpf()+" - "+e.getMessage());
-        }
-}
     public void criarContribuinte(DependenteModel dependenteModel, ContribuinteModel contribuinteModel) {
         try {
             if (!consultaCpf(contribuinteModel.getCpf())){

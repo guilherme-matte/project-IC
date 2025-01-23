@@ -122,18 +122,6 @@ public class IrpfCalculatorController {
                 irpf.put("aliquota", utilities.formatarValor(al * 100) + "%");
             }
 
-            if (!contribuinteService.consultaCpf(calculatorDTO.getContribuinteModel().getCpf())) {
-
-                contribuinteService.criarContribuinte(calculatorDTO.getDependenteModel(), calculatorDTO.getContribuinteModel());
-                System.out.println("Dados salvos com sucesso");
-            } else {
-
-            }
-            if (!dependenteService.verificaCpf(calculatorDTO.getDependenteModel().getCpf())) {
-
-                dependenteService.criarDependente(calculatorDTO.getDependenteModel(), calculatorDTO.getContribuinteModel());
-                System.out.println("Dependente salvo com sucesso");
-            }
 
 
             return ResponseEntity.status(HttpStatus.OK).body(irpf);

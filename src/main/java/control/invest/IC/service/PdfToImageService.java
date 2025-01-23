@@ -1,4 +1,4 @@
-package control.invest.IC.services;
+package control.invest.IC.service;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;

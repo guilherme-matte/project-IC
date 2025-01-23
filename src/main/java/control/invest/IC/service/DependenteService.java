@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 
 @Service
-public class DependenteService {
+public class DependenteService extends DependenteModel{
     @Autowired
     DependenteRepository dependenteRepository;
     @Autowired
@@ -27,22 +27,13 @@ public class DependenteService {
         }
     }
 
-    public void atualizarDependente(DependenteModel dependenteModel, ContribuinteModel contribuinteModel) {
-        try {
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Erro ao atualizar dependente: " + dependenteModel.getCpf() + " - " + e.getMessage());
-        }
-    }
 
     public void criarDependente(DependenteModel dependenteModel, ContribuinteModel contribuinteModel) {
         try {
             ContribuinteModel result = contribuinteRepository.findByCpf(contribuinteModel.getCpf());
 
             dependenteModel.setContribuinte(result);
-            dependenteModel.setCpf(dependenteModel.getCpf());
-            dependenteModel.setNome(dependenteModel.getNome());
+
             dependenteRepository.save(dependenteModel);
         } catch (Exception e) {
             e.printStackTrace();

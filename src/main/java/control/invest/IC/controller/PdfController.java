@@ -1,10 +1,10 @@
 package control.invest.IC.controller;
 
 import control.invest.IC.models.IrpfModel;
-import control.invest.IC.services.ImageToTextService;
-import control.invest.IC.services.IrpfService;
-import control.invest.IC.services.PdfToImageService;
-import control.invest.IC.services.StringExtractService;
+import control.invest.IC.service.ImageToTextService;
+import control.invest.IC.service.IrpfService;
+import control.invest.IC.service.PdfToImageService;
+import control.invest.IC.service.StringExtractService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
