@@ -1,8 +1,6 @@
 package control.invest.IC.controller;
 
 import control.invest.IC.dtos.CalculatorDTO;
-import control.invest.IC.models.ContribuinteModel;
-import control.invest.IC.models.DependenteModel;
 import control.invest.IC.models.IrpfModel;
 import control.invest.IC.repositories.ContribuinteRepository;
 import control.invest.IC.service.ContribuinteService;
@@ -15,9 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.sql.SQLException;
 import java.util.LinkedHashMap;
-import java.util.Optional;
 
 @RestController
 public class IrpfCalculatorController {
@@ -121,8 +117,6 @@ public class IrpfCalculatorController {
             } else {
                 irpf.put("aliquota", utilities.formatarValor(al * 100) + "%");
             }
-
-
 
             return ResponseEntity.status(HttpStatus.OK).body(irpf);
         } catch (Exception e) {
