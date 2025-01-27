@@ -23,16 +23,24 @@ public class CadastroController {
     public ResponseEntity<String> cadastrarContribuinte(@RequestBody ContribuinteModel contribuinteModel) {
         try {
 
-
             ContribuinteModel result = contribuinteRepository.findByCpf(contribuinteModel.getCpf());
+
             if (result == null) {
+
                 contribuinteRepository.save(contribuinteModel);
+
                 return ResponseEntity.ok("Cadastrado com sucesso");
+
             } else {
+
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já cadastrado");
+
             }
+
         } catch (Exception e) {
+
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar contribuinte" + e.getMessage());
+
         }
     }
 
@@ -70,5 +78,19 @@ public class CadastroController {
 
     }
 
+    @DeleteMapping("/delete/contribuinte/{cpfContribuinte}")
+    public ResponseEntity<String> deleteContribuinte(@PathVariable String cpfContribuinte) {
+        try {
+            ContribuinteModel result = contribuinteRepository.findByCpf(cpfContribuinte);
 
+            if (result != null) {
+                contribuinteRepository.deleteById(result.getId());
+                return ResponseEntity.status(HttpStatus.OK).body("CPF " + cpfContribuinte + " deletado com sucesso!");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foi possível deletar contribuinte! CPF " + cpfContribuinte + " Não encontrado");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar contribuinte - " + e.getMessage());
+        }
+    }
 }
