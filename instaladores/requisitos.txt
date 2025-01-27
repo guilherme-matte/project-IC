@@ -1,3 +1,0 @@
-Ter instalado o tesseract e jdk 23
-tesseract: https://github.com/tesseract-ocr/tesseract/releases/download/5.5.0/tesseract-ocr-w64-setup-5.5.0.20241111.exe
-JDK: https://download.oracle.com/java/23/latest/jdk-23_windows-x64_bin.exe
