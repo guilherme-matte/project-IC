@@ -1,0 +1,74 @@
+package control.invest.IC.controller;
+
+import control.invest.IC.models.ContribuinteModel;
+import control.invest.IC.models.DependenteModel;
+import control.invest.IC.repositories.ContribuinteRepository;
+import control.invest.IC.repositories.DependenteRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/cad")
+public class CadastroController {
+    @Autowired
+    ContribuinteController contribuinteController;
+    @Autowired
+    ContribuinteRepository contribuinteRepository;
+    @Autowired
+    DependenteRepository dependenteRepository;
+
+    @PostMapping("/contribuinte")
+    public ResponseEntity<String> cadastrarContribuinte(@RequestBody ContribuinteModel contribuinteModel) {
+        try {
+
+
+            ContribuinteModel result = contribuinteRepository.findByCpf(contribuinteModel.getCpf());
+            if (result == null) {
+                contribuinteRepository.save(contribuinteModel);
+                return ResponseEntity.ok("Cadastrado com sucesso");
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já cadastrado");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar contribuinte" + e.getMessage());
+        }
+    }
+
+    @PostMapping("/dependente/{cpf}")
+    public ResponseEntity<String> cadastrarDependente(@RequestBody DependenteModel dependenteModel, @PathVariable String cpf) {
+
+        DependenteModel resultDependenteModel = dependenteRepository.findByCpf(dependenteModel.getCpf());
+
+        if (resultDependenteModel != null) {
+
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF " + dependenteModel.getCpf() + " já cadastrado na base de dados");
+
+        }
+
+        ContribuinteModel resultContribuinteModel = contribuinteRepository.findByCpf(cpf);
+
+        if (resultContribuinteModel == null) { //verifica se o CPF fornecido pela URL existe cadastrada no banco, caso não tenha, retorna um status 404
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foi possível vincular dependente ao CPF do contribuinte (" + cpf + ") - CPF NÃO ENCONTRADO");
+
+        }
+
+        if (cpf.equals(dependenteModel.getCpf())) {//verifica se o cpf do contribuinte e do dependentes são iguais
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CPF não pode ser o mesmo que o do contribuinte");
+
+        }
+
+        dependenteModel.setContribuinte(resultContribuinteModel);
+
+        dependenteRepository.save(dependenteModel);
+
+        return ResponseEntity.ok("Cadastrado com sucesso");
+
+
+    }
+
+
+}

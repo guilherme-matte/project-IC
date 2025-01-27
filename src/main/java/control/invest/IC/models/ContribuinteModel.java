@@ -1,5 +1,6 @@
 package control.invest.IC.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -13,7 +14,10 @@ public class ContribuinteModel {
     @Column(unique = true, nullable = false)
     private String cpf;
     private String nome;
+
+
     @OneToMany(mappedBy = "contribuinte", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private List<DependenteModel> dependentes;
 
     public Long getId() {

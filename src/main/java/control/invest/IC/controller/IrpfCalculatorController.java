@@ -3,8 +3,6 @@ package control.invest.IC.controller;
 import control.invest.IC.dtos.CalculatorDTO;
 import control.invest.IC.models.IrpfModel;
 import control.invest.IC.repositories.ContribuinteRepository;
-import control.invest.IC.service.ContribuinteService;
-import control.invest.IC.service.DependenteService;
 import control.invest.IC.utilities.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,9 +18,9 @@ public class IrpfCalculatorController {
     @Autowired
     ContribuinteRepository contribuinteRepository;
     @Autowired
-    ContribuinteService contribuinteService;
+    ContribuinteController contribuinteController;
     @Autowired
-    DependenteService dependenteService;
+    DependenteController dependenteController;
 
     Utilities utilities = new Utilities();
 

@@ -1,5 +1,6 @@
 package control.invest.IC.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -16,7 +17,8 @@ public class DependenteModel {
 
     private String nome;
     @ManyToOne
-    @JoinColumn(name = "contribuinte_id")
+    @JoinColumn(name = "contribuinte_id", referencedColumnName = "id")
+    @JsonBackReference
     private ContribuinteModel contribuinte;
 
     public Long getId() {
