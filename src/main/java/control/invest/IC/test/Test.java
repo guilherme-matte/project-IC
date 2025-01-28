@@ -23,6 +23,7 @@ public class Test {
     public ResponseEntity<String> testCreateContribuinte(@RequestBody ContribuinteModel contribuinteModel, @RequestBody DependenteModel dependenteModel, @RequestBody int dependentesQuantidade) {
         //Metodo para criação de usuarios para fins de teste
         try {
+            if (contribuinteModel.)
             contribuinteRepository.save(contribuinteModel);
 
             DependenteModel dependente = new DependenteModel();
