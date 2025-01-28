@@ -44,7 +44,7 @@ public class CadastroController {
         }
     }
 
-    @PostMapping("/dependente/{cpf}")
+    @PostMapping("/dependente/{cpfContribuinte}")
     public ResponseEntity<String> cadastrarDependente(@RequestBody DependenteModel dependenteModel, @PathVariable String cpf) {
 
         DependenteModel resultDependenteModel = dependenteRepository.findByCpf(dependenteModel.getCpf());
@@ -83,14 +83,20 @@ public class CadastroController {
         try {
             ContribuinteModel result = contribuinteRepository.findByCpf(cpfContribuinte);
 
-            if (result != null) {
-                contribuinteRepository.deleteById(result.getId());
-                return ResponseEntity.status(HttpStatus.OK).body("CPF " + cpfContribuinte + " deletado com sucesso!");
-            } else {
+            if (result == null) {
+
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foi possível deletar contribuinte! CPF " + cpfContribuinte + " Não encontrado");
+
             }
+
+            contribuinteRepository.deleteById(result.getId());
+
+            return ResponseEntity.status(HttpStatus.OK).body("CPF " + cpfContribuinte + " deletado com sucesso!");
+
         } catch (Exception e) {
+
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar contribuinte - " + e.getMessage());
+
         }
     }
 }
