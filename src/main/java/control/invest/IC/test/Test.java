@@ -24,11 +24,13 @@ public class Test {
     public ResponseEntity<String> testCreateContribuinte(@RequestBody DadosRequestDTO requestDTO) {
         //Metodo para criação de usuarios para fins de teste
         try {
-            System.out.println(requestDTO.getContribuinteModel().getNome());
-            contribuinteRepository.save(requestDTO.getContribuinteModel());
+
+
+            contribuinteRepository.save(requestDTO.getContribuinteModel());//cria um usuario
 
 
             for (int i = 0; i < requestDTO.getDependenteQuantidade(); i++) {
+                //cria diversos dependentes
                 DependenteModel dependente = new DependenteModel();
                 dependente.setCpf(requestDTO.getDependenteModel().getCpf() + " - " + (i+1));
                 dependente.setNome(requestDTO.getDependenteModel().getNome() + " - " + (i+1));

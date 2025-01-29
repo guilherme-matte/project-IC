@@ -99,4 +99,19 @@ public class CadastroController {
 
         }
     }
+
+    @DeleteMapping("/delete/dependente/{cpfDependente}")
+    public ResponseEntity<String> deleteDependente(@PathVariable String cpfDependente) {
+        try {
+            DependenteModel result = dependenteRepository.findByCpf(cpfDependente);
+            if (result == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foi encontrado o dependente CPF: " + cpfDependente);
+            }
+
+            dependenteRepository.deleteById(result.getId());
+            return ResponseEntity.status(HttpStatus.OK).body("Dependente " + result.getNome() + " | " + result.getCpf() + " deletado com sucesso");
+        } catch (Exception e) {
+           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar Dependente - " + e.getMessage());
+        }
+    }
 }
