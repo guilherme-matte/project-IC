@@ -1,6 +1,6 @@
 package control.invest.IC.controller;
 
-import control.invest.IC.dtos.CalculatorDTO;
+import control.invest.IC.dtos.DadosRequestDTO;
 import control.invest.IC.models.IrpfModel;
 import control.invest.IC.repositories.ContribuinteRepository;
 import control.invest.IC.utilities.Utilities;
@@ -60,11 +60,11 @@ public class IrpfCalculatorController {
     }
 
     @PostMapping("/irpf/calculator")
-    public ResponseEntity<LinkedHashMap<String, Object>> calcularIrpf(@RequestBody CalculatorDTO calculatorDTO) {
+    public ResponseEntity<LinkedHashMap<String, Object>> calcularIrpf(@RequestBody DadosRequestDTO dadosRequestDTO) {
         try {
-            IrpfModel irpfModel = calculatorDTO.getIrpfModel();
-            double pagamento = calculatorDTO.getPagamento();
-            int dependente = calculatorDTO.getDependente();
+            IrpfModel irpfModel = dadosRequestDTO.getIrpfModel();
+            double pagamento = dadosRequestDTO.getPagamento();
+            int dependente = dadosRequestDTO.getDependente();
 
             double totalDependentes = calcularDependentes(dependente);
 

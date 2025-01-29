@@ -1,5 +1,6 @@
 package control.invest.IC.test;
 
+import control.invest.IC.dtos.DadosRequestDTO;
 import control.invest.IC.models.ContribuinteModel;
 import control.invest.IC.models.DependenteModel;
 import control.invest.IC.repositories.ContribuinteRepository;
@@ -20,20 +21,21 @@ public class Test {
     DependenteRepository dependenteRepository;
 
     @PostMapping("/contribuinte")
-    public ResponseEntity<String> testCreateContribuinte(@RequestBody ContribuinteModel contribuinteModel, @RequestBody DependenteModel dependenteModel, @RequestBody int dependentesQuantidade) {
+    public ResponseEntity<String> testCreateContribuinte(@RequestBody DadosRequestDTO requestDTO) {
         //Metodo para criação de usuarios para fins de teste
         try {
-            if (contribuinteModel.)
-            contribuinteRepository.save(contribuinteModel);
+            System.out.println(requestDTO.getContribuinteModel().getNome());
+            contribuinteRepository.save(requestDTO.getContribuinteModel());
 
-            DependenteModel dependente = new DependenteModel();
-            for (int i = 0; i < dependentesQuantidade; i++) {
-                dependente.setCpf(dependenteModel.getCpf() + " - " + i);
-                dependente.setNome(dependenteModel.getNome() + " - " + i);
-                dependente.setContribuinte(contribuinteModel);
+
+            for (int i = 0; i < requestDTO.getDependenteQuantidade(); i++) {
+                DependenteModel dependente = new DependenteModel();
+                dependente.setCpf(requestDTO.getDependenteModel().getCpf() + " - " + (i+1));
+                dependente.setNome(requestDTO.getDependenteModel().getNome() + " - " + (i+1));
+                dependente.setContribuinte(requestDTO.getContribuinteModel());
                 dependenteRepository.save(dependente);
             }
-            return ResponseEntity.ok("Criação do contribuinte " + contribuinteModel.getCpf() + "| E mais "+dependentesQuantidade+ " dependentes");
+            return ResponseEntity.ok("Criação do contribuinte " + requestDTO.getContribuinteModel().getCpf() + "| E mais " + requestDTO.getDependenteQuantidade() + " dependentes");
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro no teste 1 - " + e.getMessage());
