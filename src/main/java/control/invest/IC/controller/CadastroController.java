@@ -25,17 +25,13 @@ public class CadastroController {
 
             ContribuinteModel result = contribuinteRepository.findByCpf(contribuinteModel.getCpf());
 
-            if (result == null) {
-
-                contribuinteRepository.save(contribuinteModel);
-
-                return ResponseEntity.ok("Cadastrado com sucesso");
-
-            } else {
-
+            if (result != null) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já cadastrado");
-
             }
+
+            contribuinteRepository.save(contribuinteModel);
+
+            return ResponseEntity.ok("Cadastrado com sucesso");
 
         } catch (Exception e) {
 
@@ -111,7 +107,7 @@ public class CadastroController {
             dependenteRepository.deleteById(result.getId());
             return ResponseEntity.status(HttpStatus.OK).body("Dependente " + result.getNome() + " | " + result.getCpf() + " deletado com sucesso");
         } catch (Exception e) {
-           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar Dependente - " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar Dependente - " + e.getMessage());
         }
     }
 }

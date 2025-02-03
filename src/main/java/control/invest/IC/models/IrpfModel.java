@@ -1,21 +1,23 @@
 package control.invest.IC.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
-import java.util.UUID;
 
-
-//@Table(name = "tb_irpf")
+@Entity
+@Table(name = "tb_irpf")
 public class IrpfModel extends RepresentationModel<IrpfModel> implements Serializable {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID idIrpf;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idIrpf;
 
-    private String cpf;
-    private String nomePessoaFisica;
+    @ManyToOne
+    @JoinColumn(name = "contribuinte_id", referencedColumnName = "id")
+    @JsonBackReference
+    private ContribuinteModel contribuinteModel;
 
     private String fontePagadoraCnpj;
     private String fontePagadoraNomeEmpresa;
@@ -57,22 +59,6 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
     private String cnpjEmpresaPagDedutivel;
     private String nomeEmpresaPagDedutivel;
     private double valorEmpresaPagDedutivel;
-
-    public UUID getIdIrpf() {
-        return idIrpf;
-    }
-
-    public void setIdIrpf(UUID idIrpf) {
-        this.idIrpf = idIrpf;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
 
 
     public String getFontePagadoraCnpj() {
@@ -299,11 +285,19 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
         this.valorEmpresaPagDedutivel = valorEmpresaPagDedutivel;
     }
 
-    public String getNomePessoaFisica() {
-        return nomePessoaFisica;
+    public Long getIdIrpf() {
+        return idIrpf;
     }
 
-    public void setNomePessoaFisica(String nomePessoaFisica) {
-        this.nomePessoaFisica = nomePessoaFisica;
+    public void setIdIrpf(Long idIrpf) {
+        this.idIrpf = idIrpf;
+    }
+
+    public ContribuinteModel getContribuinteModel() {
+        return contribuinteModel;
+    }
+
+    public void setContribuinteModel(ContribuinteModel contribuinteModel) {
+        this.contribuinteModel = contribuinteModel;
     }
 }

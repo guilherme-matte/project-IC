@@ -1,5 +1,6 @@
 package control.invest.IC.service;
 
+import control.invest.IC.models.ContribuinteModel;
 import control.invest.IC.models.IrpfModel;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +59,7 @@ public class StringExtractService {
 
     public IrpfModel extrairCabecalho(String text) {
         try {
+            ContribuinteModel contribuinteModel = new ContribuinteModel();
             IrpfModel irpfModel = new IrpfModel();
 
             String[] lines = splitLines(text);
@@ -71,7 +73,7 @@ public class StringExtractService {
                 Matcher matcherCpnj = patternCnpj.matcher(line);
 
                 if (matcherCpf.find()) {
-                    irpfModel.setCpf(matcherCpf.group(1));
+                    contribuinteModel.setCpf(matcherCpf.group(1));
                     //irpfModel.setNomePessoaFisica(matcherCpf.group(2));
                 }
 

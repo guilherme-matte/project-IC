@@ -1,27 +1,37 @@
 package control.invest.IC.controller;
 
+import control.invest.IC.models.ContribuinteModel;
 import control.invest.IC.models.IrpfModel;
+import control.invest.IC.repositories.ContribuinteRepository;
+import control.invest.IC.repositories.IrpfRepository;
 import control.invest.IC.service.ImageToTextService;
 import control.invest.IC.service.IrpfService;
 import control.invest.IC.service.PdfToImageService;
 import control.invest.IC.service.StringExtractService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class PdfController {
     private final PdfToImageService pdfToImageService;
     private final ImageToTextService imageToTextService;
+
+    @Autowired
+    ContribuinteRepository contribuinteRepository;
+    @Autowired
+    IrpfRepository irpfRepository;
+
 
     private String formatarCampos(String text) {
         return text.replaceAll("[^a-zA-Z0-9 ]", "").trim();
@@ -30,6 +40,18 @@ public class PdfController {
     public PdfController(PdfToImageService pdfToImageService, ImageToTextService imageToTextService) {
         this.pdfToImageService = pdfToImageService;
         this.imageToTextService = imageToTextService;
+    }
+
+    @PostMapping("/irpf/saveIrpf/{cpfContribuinte}")
+    public ResponseEntity<String> saveIrpf(@RequestBody IrpfModel irpfModel, @PathVariable String cpfContribuinte) {
+        ContribuinteModel result = contribuinteRepository.findByCpf(cpfContribuinte);
+        if (result == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CPF informado " + cpfContribuinte + " não foi encontrado, verifique o CPF e tente novamente!");
+        }
+        irpfModel.setContribuinteModel(result);
+        irpfRepository.save(irpfModel);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Informe de rendimentos salvo com sucesso!");
     }
 
     @PostMapping("/irpf/extract-pdf")
@@ -98,8 +120,6 @@ public class PdfController {
             if (irpfModel != null) {
                 dados.put("cnpj", irpfModel.getFontePagadoraCnpj());
                 dados.put("nomeEmpresa", irpfModel.getFontePagadoraNomeEmpresa());
-                dados.put("cpf", irpfModel.getCpf());
-                //dados.put("pessoaFisica", formatarCampos(irpfModel.getNomePessoaFisica()));
             }
             ArrayList<String> pagamentos = stringExtractService.extrairPagamentos(extractedPagamentos);
             ArrayList<Double> pagamentosValores = stringExtractService.extrairPagamentosValores(extractedPagamentos);
