@@ -1,27 +1,28 @@
 package control.invest.IC.service;
 
+import control.invest.IC.models.ContribuinteModel;
+import control.invest.IC.models.DependenteModel;
+import control.invest.IC.repositories.ContribuinteRepository;
+import control.invest.IC.repositories.DependenteRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+
 
 @Service
 public class IrpfService {
-
-    private String extension(String fileName) {
-        int i = fileName.lastIndexOf('.');//pega o numero do indice do utimo ponto
-
-        if (i > 0) {
-            return fileName.substring(i + 1);//Pega a primeira palavra após o ponto e retona uma string
-        } else {
-            return null;
+    @Autowired
+    ContribuinteRepository contribuinteRepository;
+    @Autowired
+    DependenteRepository dependenteRepository;
+    public int getNumDependentes(String cpfContribuinte) {
+        ContribuinteModel contribuinte = contribuinteRepository.findByCpf(cpfContribuinte);
+        if (contribuinte == null) {
+            return 0;
         }
-
-    }
-
-    public boolean extensionVerify(String filename) {
-        //metodo criado para verificar se o arquivo recebido é um pdf ou uma imagem de diversas extensões.
-        if (extension(filename).equalsIgnoreCase("pdf")) {
-            return true;
-        } else {
-            return false;
-        }
+        List<DependenteModel> dependentes = dependenteRepository.findByContribuinte_Cpf(cpfContribuinte);
+        return dependentes.size();
     }
 }

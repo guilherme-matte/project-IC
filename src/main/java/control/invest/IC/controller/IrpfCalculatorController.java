@@ -3,6 +3,7 @@ package control.invest.IC.controller;
 import control.invest.IC.dtos.DadosRequestDTO;
 import control.invest.IC.models.IrpfModel;
 import control.invest.IC.repositories.ContribuinteRepository;
+import control.invest.IC.service.IrpfService;
 import control.invest.IC.utilities.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,14 +23,14 @@ public class IrpfCalculatorController {
     @Autowired
     DependenteController dependenteController;
 
+    IrpfService irpfService;
+
     Utilities utilities = new Utilities();
 
-    private double calcularDependentes(int numDependente) {
-        if (numDependente <= 0) {
-            return 0;
-        } else {
-            return numDependente * 2275.08;
-        }
+    private double calcularDependentes(String cpfContribuinte) {
+
+        return 2275.08 * irpfService.getNumDependentes(cpfContribuinte);
+
     }
 
     private double calcularImposto(double rendimentos) {
@@ -64,9 +65,8 @@ public class IrpfCalculatorController {
         try {
             IrpfModel irpfModel = dadosRequestDTO.getIrpfModel();
             double pagamento = dadosRequestDTO.getPagamento();
-            int dependente = dadosRequestDTO.getDependente();
 
-            double totalDependentes = calcularDependentes(dependente);
+            double totalDependentes = calcularDependentes(dadosRequestDTO.getContribuinteModel().getCpf());
 
             double deducoes = totalDependentes + irpfModel.getContribPrevSocial() + pagamento + irpfModel.getFapi();
 

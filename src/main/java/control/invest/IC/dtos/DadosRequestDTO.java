@@ -9,20 +9,10 @@ public class DadosRequestDTO {
     private IrpfModel irpfModel;
     private ContribuinteModel contribuinteModel;
     private DependenteModel dependenteModel;
-    private int dependenteQuantidade;
 
-    private int dependente;
 
     private double pagamento;//todos os pagamentos do usuario
 
-
-    public int getDependenteQuantidade() {
-        return dependenteQuantidade;
-    }
-
-    public void setDependenteQuantidade(int dependenteQuantidade) {
-        this.dependenteQuantidade = dependenteQuantidade;
-    }
 
     public ContribuinteModel getContribuinteModel() {
         return contribuinteModel;
@@ -46,14 +36,6 @@ public class DadosRequestDTO {
 
     public void setIrpfModel(IrpfModel irpfModel) {
         this.irpfModel = irpfModel;
-    }
-
-    public int getDependente() {
-        return dependente;
-    }
-
-    public void setDependente(int dependente) {
-        this.dependente = dependente;
     }
 
     public double getPagamento() {
