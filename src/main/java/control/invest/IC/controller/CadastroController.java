@@ -2,12 +2,15 @@ package control.invest.IC.controller;
 
 import control.invest.IC.models.ContribuinteModel;
 import control.invest.IC.models.DependenteModel;
+import control.invest.IC.models.PagamentoModel;
 import control.invest.IC.repositories.ContribuinteRepository;
 import control.invest.IC.repositories.DependenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/cad")
@@ -61,7 +64,7 @@ public class CadastroController {
 
         if (cpf.equals(dependenteModel.getCpf())) {//verifica se o cpf do contribuinte e do dependentes são iguais
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CPF não pode ser o mesmo que o do contribuinte");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CPF do dependente não pode ser o mesmo que o do contribuinte");
 
         }
 
@@ -110,4 +113,5 @@ public class CadastroController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar Dependente - " + e.getMessage());
         }
     }
+
 }

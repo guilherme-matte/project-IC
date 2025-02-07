@@ -31,11 +31,9 @@ public class DependenteController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());//retorna status not found caso não encontre o contribuinte
         }
         List<DependenteModel> dependentes = dependenteRepository.findByContribuinte_Cpf(cpfContribuinte);
-
         return ResponseEntity.ok(dependentes);
 
     }
-
 
 
 }
