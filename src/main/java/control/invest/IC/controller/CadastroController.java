@@ -2,15 +2,12 @@ package control.invest.IC.controller;
 
 import control.invest.IC.models.ContribuinteModel;
 import control.invest.IC.models.DependenteModel;
-import control.invest.IC.models.PagamentoModel;
 import control.invest.IC.repositories.ContribuinteRepository;
 import control.invest.IC.repositories.DependenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 public class CadastroController {
@@ -55,7 +52,7 @@ public class CadastroController {
 
         ContribuinteModel resultContribuinteModel = contribuinteRepository.findByCpf(cpf);
 
-        if (resultContribuinteModel == null) { //verifica se o CPF fornecido pela URL existe cadastrada no banco, caso não tenha, retorna um status 404
+        if (resultContribuinteModel == null) { //verifica se o CPF fornecido pela URL existe no banco, caso não tenha, retorna um status 404
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foi possível vincular dependente ao CPF do contribuinte (" + cpf + ") - CPF NÃO ENCONTRADO");
 

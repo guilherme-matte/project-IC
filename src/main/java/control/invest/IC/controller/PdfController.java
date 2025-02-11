@@ -5,7 +5,6 @@ import control.invest.IC.models.IrpfModel;
 import control.invest.IC.repositories.ContribuinteRepository;
 import control.invest.IC.repositories.IrpfRepository;
 import control.invest.IC.service.ImageToTextService;
-import control.invest.IC.service.IrpfService;
 import control.invest.IC.service.PdfToImageService;
 import control.invest.IC.service.StringExtractService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +32,6 @@ public class PdfController {
     IrpfRepository irpfRepository;
 
 
-    private String formatarCampos(String text) {
-        return text.replaceAll("[^a-zA-Z0-9 ]", "").trim();
-    }
-
     public PdfController(PdfToImageService pdfToImageService, ImageToTextService imageToTextService) {
         this.pdfToImageService = pdfToImageService;
         this.imageToTextService = imageToTextService;
@@ -57,7 +52,6 @@ public class PdfController {
     @PostMapping("/irpf/extract-pdf")
     public ResponseEntity<Map<String, Object>> extractPdf(@RequestPart("file") MultipartFile file) {
         IrpfModel irpfModel = new IrpfModel();
-        IrpfService irpfService = new IrpfService();
         try {
             File tempPdf = File.createTempFile("uploaded", ".pdf");
             file.transferTo(tempPdf);

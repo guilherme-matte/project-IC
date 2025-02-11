@@ -1,7 +1,6 @@
 package control.invest.IC.controller;
 
 import control.invest.IC.models.ContribuinteModel;
-import control.invest.IC.models.DependenteModel;
 import control.invest.IC.repositories.ContribuinteRepository;
 import control.invest.IC.repositories.DependenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/get")
 public class ContribuinteController {
     @Autowired
     ContribuinteRepository contribuinteRepository;
@@ -21,7 +17,7 @@ public class ContribuinteController {
 
 
 
-    @GetMapping("/contribuinte/{cpfContribuinte}")
+    @GetMapping("/get/contribuinte/{cpfContribuinte}")
     public ResponseEntity<String> getContribuinte(@PathVariable String cpfContribuinte) {
         try {
             ContribuinteModel result = contribuinteRepository.findByCpf(cpfContribuinte);

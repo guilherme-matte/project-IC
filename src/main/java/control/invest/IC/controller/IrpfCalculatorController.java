@@ -60,6 +60,7 @@ public class IrpfCalculatorController {
         return imposto;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @PostMapping("/irpf/calculator")
     public ResponseEntity<LinkedHashMap<String, Object>> calcularIrpf(@RequestBody DadosRequestDTO dadosRequestDTO) {
         try {
