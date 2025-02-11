@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/cad")
 public class CadastroController {
     @Autowired
     ContribuinteController contribuinteController;
@@ -22,7 +21,7 @@ public class CadastroController {
     @Autowired
     DependenteRepository dependenteRepository;
 
-    @PostMapping("/contribuinte")
+    @PostMapping("/cad/contribuinte")
     public ResponseEntity<String> cadastrarContribuinte(@RequestBody ContribuinteModel contribuinteModel) {
         try {
 
@@ -43,7 +42,7 @@ public class CadastroController {
         }
     }
 
-    @PostMapping("/dependente/{cpfContribuinte}")
+    @PostMapping("/cad/dependente/{cpfContribuinte}")
     public ResponseEntity<String> cadastrarDependente(@RequestBody DependenteModel dependenteModel, @PathVariable String cpf) {
 
         DependenteModel resultDependenteModel = dependenteRepository.findByCpf(dependenteModel.getCpf());
