@@ -40,7 +40,7 @@ public class CadastroController {
     }
 
     @PostMapping("/cad/dependente/{cpfContribuinte}")
-    public ResponseEntity<String> cadastrarDependente(@RequestBody DependenteModel dependenteModel, @PathVariable String cpf) {
+    public ResponseEntity<String> cadastrarDependente(@RequestBody DependenteModel dependenteModel, @PathVariable String cpfContribuinte) {
 
         DependenteModel resultDependenteModel = dependenteRepository.findByCpf(dependenteModel.getCpf());
 
@@ -50,15 +50,15 @@ public class CadastroController {
 
         }
 
-        ContribuinteModel resultContribuinteModel = contribuinteRepository.findByCpf(cpf);
+        ContribuinteModel resultContribuinteModel = contribuinteRepository.findByCpf(cpfContribuinte);
 
         if (resultContribuinteModel == null) { //verifica se o CPF fornecido pela URL existe no banco, caso não tenha, retorna um status 404
 
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foi possível vincular dependente ao CPF do contribuinte (" + cpf + ") - CPF NÃO ENCONTRADO");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foi possível vincular dependente ao CPF do contribuinte (" + cpfContribuinte + ") - CPF NÃO ENCONTRADO");
 
         }
 
-        if (cpf.equals(dependenteModel.getCpf())) {//verifica se o cpf do contribuinte e do dependentes são iguais
+        if (cpfContribuinte.equals(dependenteModel.getCpf())) {//verifica se o cpf do contribuinte e do dependentes são iguais
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CPF do dependente não pode ser o mesmo que o do contribuinte");
 
