@@ -35,7 +35,7 @@ public class EmailController {
         UserModel usuario = result.get();
 
         String text;
-        text = "Boa tarde " + usuario.getNome() + ", recebemos uma redefinição de senha para o seu usuario no IC: *SENHA*";
+        text = "Olá " + usuario.getNome() + ", recebemos uma redefinição de senha para o seu usuario no IC: *SENHA*";
 
         emailService.sendEmail(request.getTo(), "Redefinição de senha", text);
         return ResponseEntity.status(HttpStatus.OK).body("Email enviado com sucesso");

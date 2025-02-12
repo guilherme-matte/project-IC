@@ -34,4 +34,7 @@ public class UserService {
         userRepository.save(user);
         return "Usuário cadastrado com sucesso";
     }
+    public String novaSenha(String senha){
+       return "a";
+    }
 }
