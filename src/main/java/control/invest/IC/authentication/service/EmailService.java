@@ -10,6 +10,7 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
+
     public void sendEmail(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
@@ -19,4 +20,5 @@ public class EmailService {
 
         mailSender.send(message);
     }
+
 }

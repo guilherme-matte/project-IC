@@ -4,7 +4,6 @@ import control.invest.IC.authentication.model.UserModel;
 import control.invest.IC.authentication.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Optional;
 
@@ -14,6 +13,8 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private SenhaService senhaService;
 
     public String cadUsuario(UserModel request) {
         Optional<UserModel> existingUserByEmail = userRepository.findByEmail(request.getEmail());
@@ -29,12 +30,9 @@ public class UserService {
         user.setCpf(request.getCpf());
         user.setEmail(request.getEmail());
         user.setCelular(request.getCelular());
-        user.setSenha(request.getSenha());
-
+        user.setSenha(senhaService.hashSenha(request.getSenha()));
         userRepository.save(user);
         return "Usuário cadastrado com sucesso";
     }
-    public String novaSenha(String senha){
-       return "a";
-    }
+
 }

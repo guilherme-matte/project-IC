@@ -33,6 +33,26 @@ public class UserModel {
     @Column(nullable = false)
     private String senha;
 
+    private String senhaTemporaria;
+
+    private boolean senhaTemporariaBoolean;
+
+    public String getSenhaTemporaria() {
+        return senhaTemporaria;
+    }
+
+    public void setSenhaTemporaria(String senhaTemporaria) {
+        this.senhaTemporaria = senhaTemporaria;
+    }
+
+    public boolean isSenhaTemporariaBoolean() {
+        return senhaTemporariaBoolean;
+    }
+
+    public void setSenhaTemporariaBoolean(boolean senhaTemporariaBoolean) {
+        this.senhaTemporariaBoolean = senhaTemporariaBoolean;
+    }
+
     public Long getId() {
         return id;
     }
