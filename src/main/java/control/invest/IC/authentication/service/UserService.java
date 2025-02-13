@@ -21,7 +21,7 @@ public class UserService {
         Optional<UserModel> existingUserByCpf = userRepository.findByCpf(request.getCpf());
 
         if (existingUserByCpf.isPresent() || existingUserByEmail.isPresent()) {
-            throw new RuntimeException("cpf ou email já cadastrado");
+            return ("cpf ou email já cadastrado");
         }
         UserModel user = new UserModel();
         user.setNome(request.getNome());
