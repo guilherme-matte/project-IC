@@ -24,13 +24,21 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    private void redefinirSenhaTemporaria(UserModel userModel) {
+
+        userModel.setSenhaTemporaria(null);
+        userModel.setSenhaTemporariaBoolean(false);
+        userRepository.save(userModel);
+
+    }
+
     @PostMapping("/auth/cad/user")
     public ResponseEntity<String> cadUsuario(@RequestBody UserModel request) {
         String resposta = userService.cadUsuario(request);
         if (resposta.equals("Usuário cadastrado com sucesso")) {
             return ResponseEntity.status(HttpStatus.OK).body(resposta);
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resposta);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(resposta);
     }
 
     @PostMapping("/auth/login")
@@ -38,19 +46,18 @@ public class UserController {
         Optional<UserModel> usuario = userRepository.findByEmail(userLogin.getEmail());
         if (usuario.isPresent() && usuario.get().isSenhaTemporariaBoolean() && senhaService.verificarSenha(userLogin.getSenha(), usuario.get().getSenhaTemporaria())) {
 
-            usuario.get().setSenhaTemporariaBoolean(false);
-            usuario.get().setSenhaTemporaria(null);
-            userRepository.save(usuario.get());
+            redefinirSenhaTemporaria(usuario.get());
 
             return ResponseEntity.ok("Login realizado com sucesso");
         }
         if (usuario.isPresent() && senhaService.verificarSenha(userLogin.getSenha(), usuario.get().getSenha())) {
+
             if (usuario.get().isSenhaTemporariaBoolean()) {
-                usuario.get().setSenhaTemporariaBoolean(false);
-                usuario.get().setSenhaTemporaria(null);
-                userRepository.save(usuario.get());
+
+                redefinirSenhaTemporaria(usuario.get());
+
             }
-            return ResponseEntity.ok("Login realizado com sucesso!");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Login realizado com sucesso!");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou senha incorretos!");
         }
