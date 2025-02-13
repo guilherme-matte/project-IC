@@ -1,5 +1,5 @@
 # Usa uma imagem oficial do Maven para compilar o projeto
-FROM maven:3.8.6-eclipse-temurin-17 AS build
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 
 # Copia os arquivos do projeto e realiza o build
@@ -8,7 +8,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Usa uma imagem menor para rodar a aplicação
-FROM eclipse-temurin:17-jdk
+FROM eclipse-temurin:21-jdk
 WORKDIR /app
 
 # Copia o JAR gerado na etapa anterior
