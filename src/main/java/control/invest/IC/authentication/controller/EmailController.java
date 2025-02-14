@@ -2,6 +2,7 @@ package control.invest.IC.authentication.controller;
 
 import control.invest.IC.authentication.model.UserModel;
 import control.invest.IC.authentication.repositories.UserRepository;
+import control.invest.IC.authentication.service.ApiResponseDTO;
 import control.invest.IC.authentication.service.EmailService;
 import control.invest.IC.authentication.service.SenhaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,12 @@ public class EmailController {
     private EmailService emailService;
 
     @PostMapping("/reset-password/{email}")
-    public ResponseEntity<String> sendEmail(@PathVariable String email) {
+    public ResponseEntity<ApiResponseDTO> sendEmail(@PathVariable String email) {
         Optional<UserModel> result = userRepository.findByEmail(email);
 
         if (result.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("sem cadastro para o email: " + email);
+            ApiResponseDTO response = new ApiResponseDTO(null, "Email inválido", 404);
+            return ResponseEntity.status(404).body(response);
         }
 
         UserModel usuario = result.get();
@@ -46,7 +48,8 @@ public class EmailController {
         String text = "Olá " + usuario.getNome() + ", recebemos uma redefinição de senha para o seu usuario no IC: " + senhaTemporaria + "\n\n MENSAGEM PARA FINS DE TESTE";
 
         emailService.sendEmail(email, "Redefinição de senha", text);
-        return ResponseEntity.status(HttpStatus.OK).body("Email enviado com sucesso");
+        ApiResponseDTO response = new ApiResponseDTO(null, "Email enviado com sucesso", 200);
+        return ResponseEntity.status(200).body(response);
     }
 
 

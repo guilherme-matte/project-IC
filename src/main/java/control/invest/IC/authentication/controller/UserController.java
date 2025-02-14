@@ -11,11 +11,10 @@ import control.invest.IC.authentication.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -53,9 +52,7 @@ public class UserController {
         Optional<UserModel> usuario = userRepository.findByEmail(userLogin.getEmail());
         if (usuario.isPresent() && usuario.get().isSenhaTemporariaBoolean() && senhaService.verificarSenha(userLogin.getSenha(), usuario.get().getSenhaTemporaria())) {
 
-            redefinirSenhaTemporaria(usuario.get());
-
-            return ResponseEntity.ok("Login realizado com sucesso");
+            return ResponseEntity.ok("Login realizado com sucesso, crie uma nova senha");
         }
         if (usuario.isPresent() && senhaService.verificarSenha(userLogin.getSenha(), usuario.get().getSenha())) {
 
@@ -91,7 +88,7 @@ public class UserController {
         }
 
         ;
-        if (senhaService.verificarSenha(password.getSenhaAtual(), usuario.get().getSenha())) {
+        if (senhaService.verificarSenha(password.getSenhaAtual(), usuario.get().getSenha()) || senhaService.verificarSenha(password.getSenhaAtual(), usuario.get().getSenhaTemporaria())) {
 
             if (!Objects.equals(password.getSenhaNova(), password.getSenhaNovaConfirmacao())) {
                 ApiResponseDTO response = new ApiResponseDTO(null, "Os campos da nova senha não são iguais!", 400);
@@ -105,6 +102,10 @@ public class UserController {
 
                 sendEmailNovaSenhaCriada(email);
 
+                if (usuario.get().isSenhaTemporariaBoolean()) {
+                    redefinirSenhaTemporaria(usuario.get());
+                }
+
                 ApiResponseDTO response = new ApiResponseDTO(null, "Senha alterada com sucesso", 200);
                 return ResponseEntity.status(200).body(response);
             }
@@ -115,5 +116,29 @@ public class UserController {
         return ResponseEntity.status(401).body(response);
     }
 
+    @GetMapping("/get/user/{cpf}")
+    public ResponseEntity<ApiResponseDTO> getUser(@PathVariable String cpf) {
+        Optional<UserModel> userModel = userRepository.findByCpf(cpf);
+
+        if (userModel.isEmpty()) {
+            ApiResponseDTO response = new ApiResponseDTO(null, "Usuário não encontrado", 404);
+            return ResponseEntity.status(404).body(response);
+        }
+
+        UserModel usuario = userModel.get();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        LinkedHashMap user = new LinkedHashMap();
+        user.put("id", usuario.getId());
+        user.put("nome", usuario.getNome());
+        user.put("sobrenome", usuario.getSobrenome());
+        user.put("email", usuario.getEmail());
+        user.put("celular", usuario.getCelular());
+        user.put("nascimento", usuario.getDataNascimento().format(formatter));
+        user.put("cpf", usuario.getCpf());
+
+        ApiResponseDTO response = new ApiResponseDTO(user, "Usuário encontrado com sucesso", 200);
+        return ResponseEntity.status(200).body(response);
+    }
 
 }
