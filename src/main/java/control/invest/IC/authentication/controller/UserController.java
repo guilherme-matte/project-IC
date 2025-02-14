@@ -39,20 +39,24 @@ public class UserController {
     }
 
     @PostMapping("/auth/cad/user")
-    public ResponseEntity<String> cadUsuario(@RequestBody UserModel request) {
+    public ResponseEntity<ApiResponseDTO> cadUsuario(@RequestBody UserModel request) {
         String resposta = userService.cadUsuario(request);
         if (resposta.equals("Usuário cadastrado com sucesso")) {
-            return ResponseEntity.status(HttpStatus.OK).body(resposta);
+            ApiResponseDTO response = new ApiResponseDTO(null, resposta, 200);
+            return ResponseEntity.status(200).body(response);
         }
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(resposta);
+        ApiResponseDTO response = new ApiResponseDTO(null, resposta, 409);
+        return ResponseEntity.status(409).body(response);
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<String> login(@RequestBody UserLogin userLogin) {
+    public ResponseEntity<ApiResponseDTO> login(@RequestBody UserLogin userLogin) {
         Optional<UserModel> usuario = userRepository.findByEmail(userLogin.getEmail());
         if (usuario.isPresent() && usuario.get().isSenhaTemporariaBoolean() && senhaService.verificarSenha(userLogin.getSenha(), usuario.get().getSenhaTemporaria())) {
 
-            return ResponseEntity.ok("Login realizado com sucesso, crie uma nova senha");
+            ApiResponseDTO response = new ApiResponseDTO(null, "Login realizado com sucesso, crie uma nova senha!", 200);
+
+            return ResponseEntity.status(200).body(response);
         }
         if (usuario.isPresent() && senhaService.verificarSenha(userLogin.getSenha(), usuario.get().getSenha())) {
 
@@ -61,9 +65,11 @@ public class UserController {
                 redefinirSenhaTemporaria(usuario.get());
 
             }
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Login realizado com sucesso!");
+            ApiResponseDTO response = new ApiResponseDTO(null, "login realizado com sucesso!", 202);
+            return ResponseEntity.status(202).body(response);
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou senha incorretos!");
+            ApiResponseDTO response = new ApiResponseDTO(null, "Senha ou email incorretos", 401);
+            return ResponseEntity.status(401).body(response);
         }
     }
 
