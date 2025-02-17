@@ -1,6 +1,7 @@
 package control.invest.IC.authentication.controller;
 
 import control.invest.IC.authentication.dto.PasswordResetDTO;
+import control.invest.IC.authentication.dto.UserDTO;
 import control.invest.IC.authentication.dto.UserLogin;
 import control.invest.IC.authentication.model.UserModel;
 import control.invest.IC.authentication.repositories.UserRepository;
@@ -147,4 +148,30 @@ public class UserController {
         return ResponseEntity.status(200).body(response);
     }
 
+    @PutMapping("/update/user/{cpf}")
+    public ResponseEntity<ApiResponseDTO> updUser(@PathVariable String cpf, @RequestBody UserDTO userDTO) {
+        Optional<UserModel> usuario = userRepository.findByCpf(cpf);
+
+        if (usuario.isEmpty()) {
+            ApiResponseDTO response = new ApiResponseDTO(null, "Usuário não encontrado", 404);
+            return ResponseEntity.status(404).body(response);
+        }
+        Optional<UserModel> verEmail = userRepository.findByEmail(userDTO.getEmail());
+        if (verEmail.isPresent()) {
+            ApiResponseDTO response = new ApiResponseDTO(null, "Conta já cadastrada para o email informado", 409);
+            return ResponseEntity.status(409).body(response);
+        }
+
+        UserModel userExistente = usuario.get();
+
+        userExistente.setNome(userDTO.getNome());
+        userExistente.setSobrenome(userDTO.getSobrenome());
+        userExistente.setCelular(userDTO.getCelular());
+        userExistente.setEmail(userDTO.getEmail());
+        userExistente.setDataNascimento(userDTO.getDataNasc());
+        userRepository.save(userExistente);
+
+        ApiResponseDTO response = new ApiResponseDTO(userExistente, "Usuario alterado com sucesso!", 200);
+        return ResponseEntity.status(200).body(response);
+    }
 }
