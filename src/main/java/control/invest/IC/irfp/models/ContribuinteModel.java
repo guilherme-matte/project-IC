@@ -19,6 +19,26 @@ public class ContribuinteModel {
     @OneToMany(mappedBy = "contribuinte", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
     private List<DependenteModel> dependentes;
+    @OneToMany(mappedBy = "contribuinte", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PagamentoModel> pagamentos;
+    @OneToMany(mappedBy = "contribuinte", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<IrpfModel> irpf;
+
+    public List<IrpfModel> getIrpf() {
+        return irpf;
+    }
+
+    public void setIrpf(List<IrpfModel> irpf) {
+        this.irpf = irpf;
+    }
+
+    public List<PagamentoModel> getPagamentos() {
+        return pagamentos;
+    }
+
+    public void setPagamentos(List<PagamentoModel> pagamentos) {
+        this.pagamentos = pagamentos;
+    }
 
     public Long getId() {
         return id;
