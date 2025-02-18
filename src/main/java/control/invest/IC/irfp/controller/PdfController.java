@@ -132,7 +132,7 @@ public class PdfController {
                     pagamentosEfetuados.put("nome", partes[1]);
                     pagamentosEfetuados.put("valor", pagamentosValores.get(i));
                     response.put("PagamentosEfetuados " + (i + 1), pagamentosEfetuados);
-                    
+
                 }
             } else {
                 Map<String, Object> pagamentosEfetuados = new LinkedHashMap<>();
