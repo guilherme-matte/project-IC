@@ -55,7 +55,7 @@ public class UserController {
         Optional<UserModel> usuario = userRepository.findByEmail(userLogin.getEmail());
         if (usuario.isPresent() && usuario.get().isSenhaTemporariaBoolean() && senhaService.verificarSenha(userLogin.getSenha(), usuario.get().getSenhaTemporaria())) {
 
-            ApiResponseDTO response = new ApiResponseDTO(null, "Login realizado com sucesso, crie uma nova senha!", 200);
+            ApiResponseDTO response = new ApiResponseDTO(null, "Login realizado com sucesso\ncrie uma nova senha!", 200);
 
             return ResponseEntity.status(200).body(response);
         }
@@ -66,8 +66,8 @@ public class UserController {
                 redefinirSenhaTemporaria(usuario.get());
 
             }
-            ApiResponseDTO response = new ApiResponseDTO(null, "login realizado com sucesso!", 202);
-            return ResponseEntity.status(202).body(response);
+            ApiResponseDTO response = new ApiResponseDTO(null, "login realizado com sucesso!", 200);
+            return ResponseEntity.status(200).body(response);
         } else {
             ApiResponseDTO response = new ApiResponseDTO(null, "Senha ou email incorretos", 401);
             return ResponseEntity.status(401).body(response);
@@ -81,8 +81,6 @@ public class UserController {
             String text = "Olá " + usuario.getNome() + " sua senha foi alterada com sucesso!\n\n MENSAGEM PARA FINS DE TESTE!";
             emailService.sendEmail(email, "Nova senha criada", text);
         }
-
-
     }
 
     @PostMapping("/alterar-senha/{email}")
@@ -94,7 +92,7 @@ public class UserController {
             return ResponseEntity.status(404).body(response);
         }
 
-        ;
+
         if (senhaService.verificarSenha(password.getSenhaAtual(), usuario.get().getSenha()) || senhaService.verificarSenha(password.getSenhaAtual(), usuario.get().getSenhaTemporaria())) {
 
             if (!Objects.equals(password.getSenhaNova(), password.getSenhaNovaConfirmacao())) {

@@ -1,18 +1,23 @@
 package control.invest.IC.irfp.controller;
 
 import control.invest.IC.irfp.dtos.DadosRequestDTO;
+import control.invest.IC.irfp.dtos.IrpfDTO;
 import control.invest.IC.irfp.models.IrpfModel;
 import control.invest.IC.irfp.repositories.ContribuinteRepository;
+import control.invest.IC.irfp.repositories.IrpfRepository;
 import control.invest.IC.irfp.service.IrpfService;
 import control.invest.IC.irfp.utilities.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class IrpfCalculatorController {
@@ -22,6 +27,9 @@ public class IrpfCalculatorController {
     ContribuinteController contribuinteController;
     @Autowired
     DependenteController dependenteController;
+    @Autowired
+    IrpfRepository irpfRepository;
+
 
     IrpfService irpfService;
 
@@ -60,19 +68,22 @@ public class IrpfCalculatorController {
         return imposto;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    @PostMapping("/irpf/calculator")
-    public ResponseEntity<LinkedHashMap<String, Object>> calcularIrpf(@RequestBody DadosRequestDTO dadosRequestDTO) {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @PostMapping("/irpf/calculator/{cpfContribuinte}")
+    public ResponseEntity<LinkedHashMap<String, Object>> calcularIrpf(@PathVariable String cpfContribuinte) {
         try {
-            IrpfModel irpfModel = dadosRequestDTO.getIrpfModel();
-            double pagamento = dadosRequestDTO.getPagamento();
-
-            double totalDependentes = calcularDependentes(dadosRequestDTO.getContribuinteModel().getCpf());
-
-            double deducoes = totalDependentes + irpfModel.getContribPrevSocial() + pagamento + irpfModel.getFapi();
 
 
-            double rendimentos = irpfModel.getRendimentosTotais() - deducoes;
+//IrpfModel irpfModel = dadosRequestDTO.getIrpfModel();
+            double pagamento = irpfService.getTotalPagamentos(cpfContribuinte);
+
+            double totalDependentes = calcularDependentes(cpfContribuinte);
+            IrpfDTO irpf = irpfService.totalFolhas(cpfContribuinte);
+
+            double deducoes = totalDependentes + irpf.getDeducoes();
+
+
+            double rendimentos = irpf.getRendimentos() - (deducoes - pagamento);
 
 
             double al = 0;
@@ -99,25 +110,25 @@ public class IrpfCalculatorController {
             }
 
 
-            LinkedHashMap irpf = new LinkedHashMap();
+            LinkedHashMap irpfMap = new LinkedHashMap();
 
-            irpf.put("rendimento", valueFormat(rendimentos));
-            irpf.put("imposto", valueFormat(imposto));
-            irpf.put("deducoes", valueFormat(deducoes));
+            irpfMap.put("rendimento", valueFormat(rendimentos));
+            irpfMap.put("imposto", valueFormat(imposto));
+            irpfMap.put("deducoes", valueFormat(deducoes));
 
-            if (imposto > irpfModel.getImpostoRetido() || imposto == irpfModel.getImpostoRetido()) {
-                irpf.put("pagar", valueFormat(imposto - irpfModel.getImpostoRetido()));
-            } else if (imposto < irpfModel.getImpostoRetido()) {
-                irpf.put("restituir", valueFormat(irpfModel.getImpostoRetido() - imposto));
+            if (imposto > irpf.getImpostoRetido() || imposto == irpf.getImpostoRetido()) {
+                irpfMap.put("pagar", valueFormat(imposto - irpf.getImpostoRetido()));
+            } else if (imposto < irpf.getImpostoRetido()) {
+                irpfMap.put("restituir", valueFormat(irpf.getImpostoRetido() - imposto));
             }
 
             if (al == 0) {
-                irpf.put("aliquota", "0%");
+                irpfMap.put("aliquota", "0%");
             } else {
-                irpf.put("aliquota", utilities.formatarValor(al * 100) + "%");
+                irpfMap.put("aliquota", utilities.formatarValor(al * 100) + "%");
             }
 
-            return ResponseEntity.status(HttpStatus.OK).body(irpf);
+            return ResponseEntity.status(HttpStatus.OK).body(irpfMap);
         } catch (Exception e) {
             e.printStackTrace();
         }
