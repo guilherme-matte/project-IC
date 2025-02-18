@@ -17,7 +17,7 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
     @ManyToOne
     @JoinColumn(name = "contribuinte_id", referencedColumnName = "id")
     @JsonBackReference
-    private ContribuinteModel contribuinteModel;
+    private ContribuinteModel contribuinte;
 
     private String fontePagadoraCnpj;
     private String fontePagadoraNomeEmpresa;
@@ -293,11 +293,11 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
         this.idIrpf = idIrpf;
     }
 
-    public ContribuinteModel getContribuinteModel() {
-        return contribuinteModel;
+    public ContribuinteModel getContribuinte() {
+        return contribuinte;
     }
 
-    public void setContribuinteModel(ContribuinteModel contribuinteModel) {
-        this.contribuinteModel = contribuinteModel;
+    public void setContribuinte(ContribuinteModel contribuinte) {
+        this.contribuinte = contribuinte;
     }
 }

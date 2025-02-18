@@ -43,7 +43,7 @@ public class PdfController {
         if (result == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CPF informado " + cpfContribuinte + " não foi encontrado, verifique o CPF e tente novamente!");
         }
-        irpfModel.setContribuinteModel(result);
+        irpfModel.setContribuinte(result);
         irpfRepository.save(irpfModel);
 
         return ResponseEntity.status(HttpStatus.OK).body("Informe de rendimentos salvo com sucesso!");
