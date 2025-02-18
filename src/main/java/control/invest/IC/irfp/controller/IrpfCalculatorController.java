@@ -1,5 +1,6 @@
 package control.invest.IC.irfp.controller;
 
+import control.invest.IC.authentication.service.ApiResponseDTO;
 import control.invest.IC.irfp.dtos.DadosRequestDTO;
 import control.invest.IC.irfp.dtos.IrpfDTO;
 import control.invest.IC.irfp.models.IrpfModel;
@@ -68,71 +69,71 @@ public class IrpfCalculatorController {
         return imposto;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+
     @PostMapping("/irpf/calculator/{cpfContribuinte}")
-    public ResponseEntity<LinkedHashMap<String, Object>> calcularIrpf(@PathVariable String cpfContribuinte) {
-        try {
+    public ResponseEntity<ApiResponseDTO> calcularIrpf(@PathVariable String cpfContribuinte) {
 
 
-//IrpfModel irpfModel = dadosRequestDTO.getIrpfModel();
-            double pagamento = irpfService.getTotalPagamentos(cpfContribuinte);
+        double pagamento = irpfService.getTotalPagamentos(cpfContribuinte);
 
-            double totalDependentes = calcularDependentes(cpfContribuinte);
-            IrpfDTO irpf = irpfService.totalFolhas(cpfContribuinte);
+        double totalDependentes = calcularDependentes(cpfContribuinte);
+        IrpfDTO irpf = irpfService.totalFolhas(cpfContribuinte);
 
-            double deducoes = totalDependentes + irpf.getDeducoes();
-
-
-            double rendimentos = irpf.getRendimentos() - (deducoes - pagamento);
+        double deducoes = totalDependentes + irpf.getDeducoes();
 
 
-            double al = 0;
-            double imposto = 0;
-            if (rendimentos <= 24511.92) {
-                al = 0;
-                imposto = calcularImposto(rendimentos);
-            } else if (rendimentos >= 24511.93 && rendimentos <= 33919.80) {
-                al = 0.075;
-                imposto = calcularImposto(rendimentos);
+        double rendimentos = irpf.getRendimentos() - (deducoes - pagamento);
 
-            } else if (rendimentos >= 33919.81 && rendimentos <= 45012.60) {
-                al = 0.15;
-                imposto = calcularImposto(rendimentos);
-
-            } else if (rendimentos >= 45012.61 && rendimentos <= 55976.16) {
-                al = 0.225;
-                imposto = calcularImposto(rendimentos);
-
-            } else if (rendimentos >= 55976.16) {
-                al = 0.275;
-                imposto = calcularImposto(rendimentos);
-
-            }
-
-
-            LinkedHashMap irpfMap = new LinkedHashMap();
-
-            irpfMap.put("rendimento", valueFormat(rendimentos));
-            irpfMap.put("imposto", valueFormat(imposto));
-            irpfMap.put("deducoes", valueFormat(deducoes));
-
-            if (imposto > irpf.getImpostoRetido() || imposto == irpf.getImpostoRetido()) {
-                irpfMap.put("pagar", valueFormat(imposto - irpf.getImpostoRetido()));
-            } else if (imposto < irpf.getImpostoRetido()) {
-                irpfMap.put("restituir", valueFormat(irpf.getImpostoRetido() - imposto));
-            }
-
-            if (al == 0) {
-                irpfMap.put("aliquota", "0%");
-            } else {
-                irpfMap.put("aliquota", utilities.formatarValor(al * 100) + "%");
-            }
-
-            return ResponseEntity.status(HttpStatus.OK).body(irpfMap);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (irpf.getRendimentos() <= 0) {
+            ApiResponseDTO response = new ApiResponseDTO(null, "Sem folha de pagamento para poder realizar o calculo \n Adicione uma folha e tente novamente", 400);
+            return ResponseEntity.status(400).body(response);
         }
-        return null;
+
+
+        double al = 0;
+        double imposto = 0;
+        if (rendimentos <= 24511.92) {
+            al = 0;
+            imposto = calcularImposto(rendimentos);
+        } else if (rendimentos >= 24511.93 && rendimentos <= 33919.80) {
+            al = 0.075;
+            imposto = calcularImposto(rendimentos);
+
+        } else if (rendimentos >= 33919.81 && rendimentos <= 45012.60) {
+            al = 0.15;
+            imposto = calcularImposto(rendimentos);
+
+        } else if (rendimentos >= 45012.61 && rendimentos <= 55976.16) {
+            al = 0.225;
+            imposto = calcularImposto(rendimentos);
+
+        } else if (rendimentos >= 55976.16) {
+            al = 0.275;
+            imposto = calcularImposto(rendimentos);
+
+        }
+
+
+        LinkedHashMap irpfMap = new LinkedHashMap();
+
+        irpfMap.put("rendimento", valueFormat(rendimentos));
+        irpfMap.put("imposto", valueFormat(imposto));
+        irpfMap.put("deducoes", valueFormat(deducoes));
+
+        if (imposto > irpf.getImpostoRetido() || imposto == irpf.getImpostoRetido()) {
+            irpfMap.put("pagar", valueFormat(imposto - irpf.getImpostoRetido()));
+        } else if (imposto < irpf.getImpostoRetido()) {
+            irpfMap.put("restituir", valueFormat(irpf.getImpostoRetido() - imposto));
+        }
+
+        if (al == 0) {
+            irpfMap.put("aliquota", "0%");
+        } else {
+            irpfMap.put("aliquota", utilities.formatarValor(al * 100) + "%");
+        }
+        ApiResponseDTO response = new ApiResponseDTO(irpfMap, "Calculo realizado com sucesso", 200);
+        return ResponseEntity.status(200).body(response);
+
     }
 
     private double valueFormat(double valor) {

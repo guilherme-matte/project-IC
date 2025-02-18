@@ -50,7 +50,7 @@ public class PdfController {
     }
 
     @PostMapping("/irpf/extract-pdf")
-    public ResponseEntity<Map<String, Object>> extractPdf(@RequestPart("file") MultipartFile file) {
+    public ResponseEntity<Map<String, Object>> extractPdf(@RequestParam("file") MultipartFile file) {
         IrpfModel irpfModel = new IrpfModel();
         try {
             File tempPdf = File.createTempFile("uploaded", ".pdf");
@@ -77,7 +77,6 @@ public class PdfController {
             Map<String, Object> rendimentos = new LinkedHashMap<>();
             Map<String, Object> rendimentosIsentos = new LinkedHashMap<>();
             Map<String, Object> rendimentosAcumulados = new LinkedHashMap<>();
-            Map<String, Object> pagamentosEfetuados = new LinkedHashMap<>();
             Map<String, Object> dados = new LinkedHashMap<>();
             Map<String, Object> response = new LinkedHashMap<>();
 
@@ -121,17 +120,27 @@ public class PdfController {
             response.put("dados", dados);
 
             response.put("rendimento", rendimentos);
-            if (!pagamentos.isEmpty() && !pagamentosValores.isEmpty()) {
-                for (int i = 0; i < pagamentos.size(); i++) {
-                    pagamentosEfetuados.put("pagamento " + (i + 1), pagamentos.get(i));
-                    pagamentosEfetuados.put("valor " + (i + 1), pagamentosValores.get(i));
-                }
-            } else {
-                pagamentosEfetuados.put("mensagem", "Nenhum pagamento realizado!");
-            }
+
             response.put("rendimentosIsentos", rendimentosIsentos);
             response.put("rendimentosAcumulados", rendimentosAcumulados);
-            response.put("PagamentosEfetuados", pagamentosEfetuados);
+            if (!pagamentos.isEmpty() && !pagamentosValores.isEmpty()) {
+                for (int i = 0; i < pagamentos.size(); i++) {
+                    String[] partes = pagamentos.get(i).split(" - ");
+                    Map<String, Object> pagamentosEfetuados = new LinkedHashMap<>();
+
+                    pagamentosEfetuados.put("cpf/cnpj", partes[0]);
+                    pagamentosEfetuados.put("nome", partes[1]);
+                    pagamentosEfetuados.put("valor", pagamentosValores.get(i));
+                    response.put("PagamentosEfetuados " + (i + 1), pagamentosEfetuados);
+                    
+                }
+            } else {
+                Map<String, Object> pagamentosEfetuados = new LinkedHashMap<>();
+
+                pagamentosEfetuados.put("mensagem", "Nenhum pagamento realizado!");
+                response.put("PagamentosEfetuados", pagamentosEfetuados);
+
+            }
 
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (IOException e) {

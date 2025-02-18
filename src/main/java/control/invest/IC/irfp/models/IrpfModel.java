@@ -55,11 +55,6 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
     private double impostoRetidoRendRec;
     private double rendIsentos;
 
-    //pagamento dedutiveis
-    private String cnpjEmpresaPagDedutivel;
-    private String nomeEmpresaPagDedutivel;
-    private double valorEmpresaPagDedutivel;
-
 
     public String getFontePagadoraCnpj() {
         return fontePagadoraCnpj;
@@ -261,29 +256,6 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
         this.rendIsentos = rendIsentos;
     }
 
-    public String getCnpjEmpresaPagDedutivel() {
-        return cnpjEmpresaPagDedutivel;
-    }
-
-    public void setCnpjEmpresaPagDedutivel(String cnpjEmpresaPagDedutivel) {
-        this.cnpjEmpresaPagDedutivel = cnpjEmpresaPagDedutivel;
-    }
-
-    public String getNomeEmpresaPagDedutivel() {
-        return nomeEmpresaPagDedutivel;
-    }
-
-    public void setNomeEmpresaPagDedutivel(String nomeEmpresaPagDedutivel) {
-        this.nomeEmpresaPagDedutivel = nomeEmpresaPagDedutivel;
-    }
-
-    public double getValorEmpresaPagDedutivel() {
-        return valorEmpresaPagDedutivel;
-    }
-
-    public void setValorEmpresaPagDedutivel(double valorEmpresaPagDedutivel) {
-        this.valorEmpresaPagDedutivel = valorEmpresaPagDedutivel;
-    }
 
     public Long getIdIrpf() {
         return idIrpf;
