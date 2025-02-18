@@ -1,5 +1,6 @@
 package control.invest.IC.irfp.controller;
 
+import control.invest.IC.authentication.service.ApiResponseDTO;
 import control.invest.IC.irfp.models.ContribuinteModel;
 import control.invest.IC.irfp.models.IrpfModel;
 import control.invest.IC.irfp.repositories.ContribuinteRepository;
@@ -50,7 +51,7 @@ public class PdfController {
     }
 
     @PostMapping("/irpf/extract-pdf")
-    public ResponseEntity<Map<String, Object>> extractPdf(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<ApiResponseDTO> extractPdf(@RequestParam("file") MultipartFile file) {
         IrpfModel irpfModel = new IrpfModel();
         try {
             File tempPdf = File.createTempFile("uploaded", ".pdf");
@@ -78,7 +79,7 @@ public class PdfController {
             Map<String, Object> rendimentosIsentos = new LinkedHashMap<>();
             Map<String, Object> rendimentosAcumulados = new LinkedHashMap<>();
             Map<String, Object> dados = new LinkedHashMap<>();
-            Map<String, Object> response = new LinkedHashMap<>();
+            Map<String, Object> responseMap = new LinkedHashMap<>();
 
 
             if (irpfModel != null) {
@@ -117,12 +118,12 @@ public class PdfController {
             ArrayList<String> pagamentos = stringExtractService.extrairPagamentos(extractedPagamentos);
             ArrayList<Double> pagamentosValores = stringExtractService.extrairPagamentosValores(extractedPagamentos);
 
-            response.put("dados", dados);
+            responseMap.put("dados", dados);
 
-            response.put("rendimento", rendimentos);
+            responseMap.put("rendimento", rendimentos);
 
-            response.put("rendimentosIsentos", rendimentosIsentos);
-            response.put("rendimentosAcumulados", rendimentosAcumulados);
+            responseMap.put("rendimentosIsentos", rendimentosIsentos);
+            responseMap.put("rendimentosAcumulados", rendimentosAcumulados);
             if (!pagamentos.isEmpty() && !pagamentosValores.isEmpty()) {
                 for (int i = 0; i < pagamentos.size(); i++) {
                     String[] partes = pagamentos.get(i).split(" - ");
@@ -131,18 +132,18 @@ public class PdfController {
                     pagamentosEfetuados.put("cpf/cnpj", partes[0]);
                     pagamentosEfetuados.put("nome", partes[1]);
                     pagamentosEfetuados.put("valor", pagamentosValores.get(i));
-                    response.put("PagamentosEfetuados " + (i + 1), pagamentosEfetuados);
+                    responseMap.put("PagamentosEfetuados " + (i + 1), pagamentosEfetuados);
 
                 }
             } else {
                 Map<String, Object> pagamentosEfetuados = new LinkedHashMap<>();
 
                 pagamentosEfetuados.put("mensagem", "Nenhum pagamento realizado!");
-                response.put("PagamentosEfetuados", pagamentosEfetuados);
+                responseMap.put("PagamentosEfetuados", pagamentosEfetuados);
 
             }
-
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            ApiResponseDTO response = new ApiResponseDTO(responseMap, "PDF extraído com sucesso!", 200);
+            return ResponseEntity.status(200).body(response);
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
