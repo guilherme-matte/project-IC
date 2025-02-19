@@ -3,6 +3,7 @@ package control.invest.IC.irfp.controller;
 import control.invest.IC.authentication.service.ApiResponseDTO;
 import control.invest.IC.irfp.models.ContribuinteModel;
 import control.invest.IC.irfp.models.IrpfModel;
+import control.invest.IC.irfp.models.PagamentoModel;
 import control.invest.IC.irfp.repositories.ContribuinteRepository;
 import control.invest.IC.irfp.repositories.IrpfRepository;
 import control.invest.IC.irfp.service.ImageToTextService;
@@ -124,15 +125,19 @@ public class PdfController {
 
             responseMap.put("rendimentosIsentos", rendimentosIsentos);
             responseMap.put("rendimentosAcumulados", rendimentosAcumulados);
+            
             if (!pagamentos.isEmpty() && !pagamentosValores.isEmpty()) {
                 for (int i = 0; i < pagamentos.size(); i++) {
                     String[] partes = pagamentos.get(i).split(" - ");
                     Map<String, Object> pagamentosEfetuados = new LinkedHashMap<>();
 
+
+
                     pagamentosEfetuados.put("cpf/cnpj", partes[0]);
                     pagamentosEfetuados.put("nome", partes[1]);
                     pagamentosEfetuados.put("valor", pagamentosValores.get(i));
                     responseMap.put("PagamentosEfetuados " + (i + 1), pagamentosEfetuados);
+
 
                 }
             } else {
