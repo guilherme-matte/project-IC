@@ -10,6 +10,7 @@ import control.invest.IC.irfp.repositories.ContribuinteRepository;
 import control.invest.IC.irfp.repositories.DependenteRepository;
 import control.invest.IC.irfp.repositories.IrpfRepository;
 import control.invest.IC.irfp.repositories.PagamentosRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -53,16 +54,15 @@ public class IrpfService {
 
     public IrpfDTO totalFolhas(String cpfContribuinte) {
         List<IrpfModel> result = irpfRepository.findByContribuinte_Cpf(cpfContribuinte);
+        IrpfDTO irpfDTO = new IrpfDTO();
         Double rendimentos = 0d;
         Double deducoes = 0d;
         Double impostoRetido = 0d;
         for (int i = 0; i < result.size(); i++) {
             rendimentos += result.get(i).getRendimentosTotais();
-            deducoes += result.get(i).getContribPrevSocial() + result.get(i).getFapi();
+            deducoes += result.get(i).getPrevSocial() + result.get(i).getFapi();
             impostoRetido += result.get(i).getImpostoRetido();
         }
-
-        IrpfDTO irpfDTO = new IrpfDTO();
         irpfDTO.setRendimentos(rendimentos);
         irpfDTO.setDeducoes(deducoes);
         irpfDTO.setImpostoRetido(impostoRetido);
@@ -70,11 +70,15 @@ public class IrpfService {
         return irpfDTO;
     }
 
-    public void putFolha (Long id,IrpfModel irpfModel) {
+    public void putFolha(Long id, IrpfModel irpfModel) {
         Optional<IrpfModel> result = irpfRepository.findById(id);
 
-        irpfModel = result.get();
-        irpfRepository.save(irpfModel);
+
+        IrpfModel folhaExistente = result.get();
+        BeanUtils.copyProperties(irpfModel, folhaExistente, "id");
+
+
+        irpfRepository.save(folhaExistente);
 
     }
 }

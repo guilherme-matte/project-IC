@@ -126,7 +126,9 @@ public class StringExtractService {
                     retorno.add(matcherCnpj.group(1) + " - " + matcherCnpj.group(2).replace("-", "").trim());
                 }
             }
+
             return retorno;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
