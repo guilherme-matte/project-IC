@@ -1,5 +1,6 @@
 package control.invest.IC.irfp.service;
 
+import control.invest.IC.authentication.service.ApiResponseDTO;
 import control.invest.IC.irfp.dtos.IrpfDTO;
 import control.invest.IC.irfp.models.ContribuinteModel;
 import control.invest.IC.irfp.models.DependenteModel;
@@ -10,9 +11,13 @@ import control.invest.IC.irfp.repositories.DependenteRepository;
 import control.invest.IC.irfp.repositories.IrpfRepository;
 import control.invest.IC.irfp.repositories.PagamentosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -56,11 +61,20 @@ public class IrpfService {
             deducoes += result.get(i).getContribPrevSocial() + result.get(i).getFapi();
             impostoRetido += result.get(i).getImpostoRetido();
         }
+
         IrpfDTO irpfDTO = new IrpfDTO();
         irpfDTO.setRendimentos(rendimentos);
         irpfDTO.setDeducoes(deducoes);
         irpfDTO.setImpostoRetido(impostoRetido);
 
         return irpfDTO;
+    }
+
+    public void putFolha (Long id,IrpfModel irpfModel) {
+        Optional<IrpfModel> result = irpfRepository.findById(id);
+
+        irpfModel = result.get();
+        irpfRepository.save(irpfModel);
+
     }
 }

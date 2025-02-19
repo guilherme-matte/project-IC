@@ -69,7 +69,12 @@ public class IrpfCalculatorController {
         return imposto;
     }
 
-
+    @PostMapping("/irpf/somaFolha/{cpfContribuinte}")
+    public ResponseEntity<ApiResponseDTO> somaFolha(@PathVariable String cpfContribuinte){
+    IrpfDTO irpfDTO = irpfService.totalFolhas(cpfContribuinte);
+        ApiResponseDTO response = new ApiResponseDTO(irpfDTO,"Folha calculada com sucesso!",200);
+        return ResponseEntity.status(200).body(response);
+    }
     @PostMapping("/irpf/calculator/{cpfContribuinte}")
     public ResponseEntity<ApiResponseDTO> calcularIrpf(@PathVariable String cpfContribuinte) {
 
