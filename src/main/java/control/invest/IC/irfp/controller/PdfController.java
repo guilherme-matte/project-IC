@@ -1,6 +1,8 @@
 package control.invest.IC.irfp.controller;
 
 import control.invest.IC.authentication.service.ApiResponseDTO;
+import control.invest.IC.irfp.dtos.IrpfDTO;
+import control.invest.IC.irfp.dtos.PagamentoDTO;
 import control.invest.IC.irfp.models.ContribuinteModel;
 import control.invest.IC.irfp.models.IrpfModel;
 import control.invest.IC.irfp.models.PagamentoModel;
@@ -116,8 +118,6 @@ public class PdfController {
                 dados.put("cnpj", irpfModel.getFontePagadoraCnpj());
                 dados.put("nomeEmpresa", irpfModel.getFontePagadoraNomeEmpresa());
             }
-            ArrayList<String> pagamentos = stringExtractService.extrairPagamentos(extractedPagamentos);
-            ArrayList<Double> pagamentosValores = stringExtractService.extrairPagamentosValores(extractedPagamentos);
 
             responseMap.put("dados", dados);
 
@@ -125,28 +125,25 @@ public class PdfController {
 
             responseMap.put("rendimentosIsentos", rendimentosIsentos);
             responseMap.put("rendimentosAcumulados", rendimentosAcumulados);
-            
-            if (!pagamentos.isEmpty() && !pagamentosValores.isEmpty()) {
-                for (int i = 0; i < pagamentos.size(); i++) {
-                    String[] partes = pagamentos.get(i).split(" - ");
-                    Map<String, Object> pagamentosEfetuados = new LinkedHashMap<>();
 
 
+            ArrayList<PagamentoDTO> pagamentosList = new ArrayList<>();
 
-                    pagamentosEfetuados.put("cpf/cnpj", partes[0]);
-                    pagamentosEfetuados.put("nome", partes[1]);
-                    pagamentosEfetuados.put("valor", pagamentosValores.get(i));
-                    responseMap.put("PagamentosEfetuados " + (i + 1), pagamentosEfetuados);
+            ArrayList<String> pagamentos = stringExtractService.extrairPagamentos(extractedPagamentos);
 
+            ArrayList<Double> pagamentosValores = stringExtractService.extrairPagamentosValores(extractedPagamentos);
 
-                }
-            } else {
-                Map<String, Object> pagamentosEfetuados = new LinkedHashMap<>();
+            for (int i = 0; i < pagamentos.size(); i++) {
+                PagamentoDTO dto = new PagamentoDTO();
+                String[] partes = pagamentos.get(i).split(" - ");
+                dto.setCpfCnpj(partes[0]);
+                dto.setNome(partes[1]);
+                dto.setValor(pagamentosValores.get(i));
 
-                pagamentosEfetuados.put("mensagem", "Nenhum pagamento realizado!");
-                responseMap.put("PagamentosEfetuados", pagamentosEfetuados);
-
+                pagamentosList.add(dto);
             }
+            responseMap.put("pagamentosEfetuados", pagamentosList);
+
             ApiResponseDTO response = new ApiResponseDTO(responseMap, "PDF extraído com sucesso!", 200);
             return ResponseEntity.status(200).body(response);
         } catch (IOException e) {
