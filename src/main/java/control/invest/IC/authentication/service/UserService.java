@@ -17,7 +17,8 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private SenhaService senhaService;
-
+@Autowired
+private EmailService emailService;
     public String cadUsuario(UserModel request) {
         Optional<UserModel> existingUserByEmail = userRepository.findByEmail(request.getEmail());
         Optional<UserModel> existingUserByCpf = userRepository.findByCpf(request.getCpf());
@@ -34,6 +35,7 @@ public class UserService {
         user.setCelular(request.getCelular());
         user.setSenha(senhaService.hashSenha(request.getSenha()));
         userRepository.save(user);
+        emailService.emailBoasVindas(user.getEmail());//Email de boas vindas é enviado
         return "Usuário cadastrado com sucesso";
     }
 

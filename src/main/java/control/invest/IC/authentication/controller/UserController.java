@@ -9,11 +9,14 @@ import control.invest.IC.authentication.service.ApiResponseDTO;
 import control.invest.IC.authentication.service.EmailService;
 import control.invest.IC.authentication.service.SenhaService;
 import control.invest.IC.authentication.service.UserService;
+import control.invest.IC.irfp.models.ContribuinteModel;
+import control.invest.IC.irfp.repositories.ContribuinteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.Objects;
@@ -170,6 +173,28 @@ public class UserController {
         userRepository.save(userExistente);
 
         ApiResponseDTO response = new ApiResponseDTO(userExistente, "Usuario alterado com sucesso!", 200);
+        return ResponseEntity.status(200).body(response);
+    }
+
+    @Autowired
+    ContribuinteRepository contribuinteRepository;
+
+    @DeleteMapping("/delete/user/{email}")
+    public ResponseEntity<ApiResponseDTO> deleteUser(@PathVariable String email) {
+        Optional<UserModel> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
+            ApiResponseDTO response = new ApiResponseDTO(null, "Não foi possivel deletar usuário, email inválido.", 404);
+
+            return ResponseEntity.status(404).body(response);
+        }
+        ContribuinteModel contribuinte = contribuinteRepository.findByCpf(user.get().getCpf());
+        if (contribuinte != null) {
+            contribuinteRepository.delete(contribuinte);
+        }
+
+        userRepository.delete(user.get());
+
+        ApiResponseDTO response = new ApiResponseDTO(null, "Usuário deletado com sucesso!", 200);
         return ResponseEntity.status(200).body(response);
     }
 }
