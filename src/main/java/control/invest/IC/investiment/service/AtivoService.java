@@ -7,6 +7,7 @@ import control.invest.IC.investiment.DTO.BrapiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -21,8 +22,8 @@ public class AtivoService {
         this.objectMapper = new ObjectMapper();
     }
 
-    private String brApi(String sigla){
-        return "https://brapi.dev/api/quote/"+sigla+"?token="+token.getBrapiToken();
+    private String brApi(String sigla) {
+        return "https://brapi.dev/api/quote/" + sigla + "?token=" + token.getBrapiToken();
     }
 
     public AtivoDTO buscarAtivo(String sigla) {
@@ -38,6 +39,7 @@ public class AtivoService {
             return (brapiResponse.getResults() != null && !brapiResponse.getResults().isEmpty())
                     ? brapiResponse.getResults().get(0)
                     : null;
+            
         } catch (Exception e) {
             throw new RuntimeException("Erro ao converter resposta da API", e);
         }
