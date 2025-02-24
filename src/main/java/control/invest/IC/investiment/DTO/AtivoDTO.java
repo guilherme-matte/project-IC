@@ -52,7 +52,7 @@ public class AtivoDTO {
         this.sigla = sigla;
     }
 
-    
+
     public Double getPrecoAtual() {
         return precoAtual;
     }

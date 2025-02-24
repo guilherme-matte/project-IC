@@ -21,12 +21,16 @@ public class AtivoService {
         this.objectMapper = new ObjectMapper();
     }
 
+    private String brApi(String sigla){
+        return "https://brapi.dev/api/quote/"+sigla+"?token="+token.getBrapiToken();
+    }
+
     public AtivoDTO buscarAtivo(String sigla) {
-        String url = "https://brapi.dev/api/quote/" + sigla + "?token=" + token.getBrapiToken();
 
-        System.out.println("Consultando: " + url);
 
-        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        System.out.println("Consultando: " + brApi(sigla));
+
+        ResponseEntity<String> response = restTemplate.getForEntity(brApi(sigla), String.class);
         System.out.println(response.getBody());
         try {
             BrapiResponse brapiResponse = objectMapper.readValue(response.getBody(), BrapiResponse.class);
