@@ -29,10 +29,11 @@ public class AtivoService {
     public AtivoDTO buscarAtivo(String sigla) {
 
 
-        System.out.println("Consultando: " + brApi(sigla));
 
         ResponseEntity<String> response = restTemplate.getForEntity(brApi(sigla), String.class);
+
         System.out.println(response.getBody());
+
         try {
             BrapiResponse brapiResponse = objectMapper.readValue(response.getBody(), BrapiResponse.class);
 

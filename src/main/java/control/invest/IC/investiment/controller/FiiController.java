@@ -32,8 +32,13 @@ public class FiiController {
 
     @GetMapping("/fii/{siglaFii}")
     public ResponseEntity<ApiResponseDTO> retornarFii(@PathVariable String siglaFii) {
-        ApiResponseDTO response = new ApiResponseDTO(ativoService.buscarAtivo(siglaFii.toUpperCase()), "Fii encontrado com sucesso", 200);
-        return ResponseEntity.status(200).body(response);
+        AtivoDTO dto = ativoService.buscarAtivo(siglaFii.toUpperCase());
+        if (dto == null) {
+            return response.response(null, "Ativo não encontrado", 404);
+        }
+        return response.response(dto, "Ativo encontrado com sucesso!", 200);
+
+
     }
 
     @PostMapping("/fii/cad/{cpfContribuinte}")
@@ -63,7 +68,7 @@ public class FiiController {
 
     @PutMapping("/fii/upd/{cpfContribuinte}")
     public ResponseEntity<ApiResponseDTO> updFii(@PathVariable String cpfContribuinte, @RequestBody TransacaoDTO dto) {
-
+        //pega o valor de mercado do ativo
         ContribuinteModel result = contribuinteRepository.findByCpf(cpfContribuinte);
 
         if (result == null) {
@@ -98,4 +103,37 @@ public class FiiController {
 
         return response.response(fiiNovo, resposta, 200);
     }
+
+    @PostMapping("/fii/cad/custom/{cpfContribuinte}")
+    public ResponseEntity<ApiResponseDTO> postCustomFii(@PathVariable String cpfContribuinte, @RequestBody TransacaoDTO transacaoDTO) {
+        ContribuinteModel resultContribuinte = contribuinteRepository.findByCpf(cpfContribuinte);
+
+        if (resultContribuinte == null) {
+            return response.response(null, "CPF " + cpfContribuinte + " não encontrado", 404);
+        }
+
+
+        AtivoDTO ativoEncontrado = ativoService.buscarAtivo(transacaoDTO.getSigla());
+        if (ativoEncontrado == null) {
+            return response.response(null, "Fii " + transacaoDTO.getSigla() + " não encontrado", 404);
+        }
+
+        Optional<FiiModel> fiiExistente = fiiRepository.findBySiglaAndContribuinteId(ativoEncontrado.getSigla(), resultContribuinte.getId());
+
+        if (fiiExistente.isPresent()) {
+            return response.response(null, "Fii " + transacaoDTO.getSigla() + " já cadastrado para este usuário", 409);
+        }
+
+        FiiModel fii = new FiiModel();
+
+
+        fii.setCotas(fiiExistente.get().getCotas() + transacaoDTO.getCotas());
+
+        fii.setTotalValor(fiiExistente.get().getTotalValor() + (fii.getCotas() * transacaoDTO.getAtivoDTO().getPrecoAtual()));
+
+        fiiRepository.save(fii);
+        return response.response(fii, "Fii " + transacaoDTO.getSigla() + " cadastrado com sucesso!", 200);
+    }
+
+
 }
