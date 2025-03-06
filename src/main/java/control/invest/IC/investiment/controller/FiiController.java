@@ -7,6 +7,7 @@ import control.invest.IC.investiment.DTO.TransacaoDTO;
 import control.invest.IC.investiment.model.FiiModel;
 import control.invest.IC.investiment.repository.FiiRepository;
 import control.invest.IC.investiment.service.AtivoService;
+import control.invest.IC.investiment.service.CalculoAtivoService;
 import control.invest.IC.irfp.models.ContribuinteModel;
 import control.invest.IC.irfp.repositories.ContribuinteRepository;
 import control.invest.IC.response.Response;
@@ -28,7 +29,8 @@ public class FiiController {
     private FiiRepository fiiRepository;
     @Autowired
     private Response response;
-
+    @Autowired
+    private CalculoAtivoService calculoService;
 
     @GetMapping("/fii/{siglaFii}")
     public ResponseEntity<ApiResponseDTO> retornarFii(@PathVariable String siglaFii) {
@@ -135,5 +137,13 @@ public class FiiController {
         return response.response(fii, "Fii " + transacaoDTO.getSigla() + " cadastrado com sucesso!", 200);
     }
 
+    @GetMapping("/calcular-fii/{siglaFii}/{cpfContribuinte}")
+    public ResponseEntity<ApiResponseDTO> calcularFii(@PathVariable String cpfContribuinte, @PathVariable String siglaFii) {
+        ContribuinteModel contribuinte = contribuinteRepository.findByCpf(cpfContribuinte);
+        if (contribuinte == null) {
+        }
+        Optional<FiiModel> fii = fiiRepository.findBySiglaAndContribuinteId(siglaFii, contribuinte.getId());
 
+        return calculoService.calcularAtivo(fii.get(), cpfContribuinte);
+    }
 }

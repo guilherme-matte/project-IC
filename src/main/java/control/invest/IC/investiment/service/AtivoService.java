@@ -29,10 +29,7 @@ public class AtivoService {
     public AtivoDTO buscarAtivo(String sigla) {
 
 
-
         ResponseEntity<String> response = restTemplate.getForEntity(brApi(sigla), String.class);
-
-        System.out.println(response.getBody());
 
         try {
             BrapiResponse brapiResponse = objectMapper.readValue(response.getBody(), BrapiResponse.class);
@@ -40,7 +37,7 @@ public class AtivoService {
             return (brapiResponse.getResults() != null && !brapiResponse.getResults().isEmpty())
                     ? brapiResponse.getResults().get(0)
                     : null;
-            
+
         } catch (Exception e) {
             throw new RuntimeException("Erro ao converter resposta da API", e);
         }
