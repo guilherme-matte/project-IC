@@ -68,7 +68,7 @@ public class FiiController {
         return ResponseEntity.status(200).body(response);
     }
 
-    @PutMapping("/fii/upd/{cpfContribuinte}")
+    @PutMapping("/fii/transacao/{cpfContribuinte}")
     public ResponseEntity<ApiResponseDTO> updFii(@PathVariable String cpfContribuinte, @RequestBody TransacaoDTO dto) {
         //pega o valor de mercado do ativo
         ContribuinteModel result = contribuinteRepository.findByCpf(cpfContribuinte);

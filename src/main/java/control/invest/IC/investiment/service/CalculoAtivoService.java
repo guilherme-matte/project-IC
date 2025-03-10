@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -26,6 +28,11 @@ public class CalculoAtivoService {
     private ContribuinteRepository contribuinteRepository;
     @Autowired
     private AtivoService ativoService;
+
+    private Double formatNumber(Double number) {
+        DecimalFormat df = new DecimalFormat("0.##");
+        return Double.parseDouble(df.format(number).replace(".", "").replace(",", "."));
+    }
 
     public ResponseEntity<ApiResponseDTO> calcularFii(FiiModel fiiModel, String cpf) {
         ContribuinteModel contribuinte = contribuinteRepository.findByCpf(cpf);
@@ -48,19 +55,21 @@ public class CalculoAtivoService {
         Double precoMedio = fiiModel.getTotalValor() / fiiModel.getCotas();
         Double saldoTotal = fiiModel.getCotas() * fiiAtual.getPrecoAtual();
         Double precoAtual = fiiAtual.getPrecoAtual();
-        Double variacao = (precoMedio / precoAtual) - 1;
+        Double variacao = ((precoAtual - precoMedio) / precoMedio) * 100;
 
         Map<String, Object> calculoAtivo = new LinkedHashMap<>();
 
+        calculoAtivo.put("Fii", fiiModel.getSigla());
         calculoAtivo.put("Cotas", fiiModel.getCotas());
-        calculoAtivo.put("Preço Médio", precoMedio);
-        calculoAtivo.put("Preço Atual", precoAtual);
-        calculoAtivo.put("Saldo", saldoTotal);
+        calculoAtivo.put("Preço Médio", formatNumber(precoMedio));
+        calculoAtivo.put("Preço Atual", formatNumber(precoAtual));
+        calculoAtivo.put("Saldo", formatNumber(saldoTotal));
 
-        calculoAtivo.put("Variação", variacao);
+        calculoAtivo.put("Variação", formatNumber(variacao));
 
         return response.response(calculoAtivo, "Calculo do ativo " + fiiModel.getSigla() + " realizado com sucesso!", 200);
 
     }
+
 
 }
