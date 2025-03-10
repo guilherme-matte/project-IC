@@ -141,9 +141,10 @@ public class FiiController {
     public ResponseEntity<ApiResponseDTO> calcularFii(@PathVariable String cpfContribuinte, @PathVariable String siglaFii) {
         ContribuinteModel contribuinte = contribuinteRepository.findByCpf(cpfContribuinte);
         if (contribuinte == null) {
+            return response.response(null, "Contribuinte não encontrado", 404);
         }
-        Optional<FiiModel> fii = fiiRepository.findBySiglaAndContribuinteId(siglaFii, contribuinte.getId());
+        Optional<FiiModel> fii = fiiRepository.findBySiglaAndContribuinteId(siglaFii.toUpperCase(), contribuinte.getId());
 
-        return calculoService.calcularAtivo(fii.get(), cpfContribuinte);
+        return calculoService.calcularFii(fii.get(), cpfContribuinte);
     }
 }
