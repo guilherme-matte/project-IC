@@ -101,9 +101,8 @@ public class CalculoFiiService {
 
         }
 
-        variacaoCarteira = ((precoAtualCarteira - precoMedioCarteira) / precoMedioCarteira) * 100;
+        variacaoCarteira = ((saldoTotalCarteira - saldoRealAplicado) / saldoRealAplicado) * 100;
         fiisListMap.put("Variação total", formatNumber(variacaoCarteira));
-        fiisListMap.put("Preço médio total", formatNumber(precoMedioCarteira));
         fiisListMap.put("Saldo total carteira", formatNumber(saldoTotalCarteira));
         fiisListMap.put("Saldo real aplicado", formatNumber(saldoRealAplicado));
         return fiisListMap;

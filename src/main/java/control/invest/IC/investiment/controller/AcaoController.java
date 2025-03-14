@@ -44,6 +44,6 @@ public class AcaoController {
         if (contribuinte == null) {
             return response.response(null, "CPF " + cpfContribuinte + " não encontado", 404);
         }
-        
+    return null;
     }
 }
