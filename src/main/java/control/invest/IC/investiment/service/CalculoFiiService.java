@@ -10,17 +10,15 @@ import control.invest.IC.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class CalculoAtivoService {
+public class CalculoFiiService {
 
     @Autowired
     private Response response;
@@ -76,34 +74,39 @@ public class CalculoAtivoService {
     public LinkedHashMap<String, Object> calcularCarteiraFii(ContribuinteModel contribuinte) {
         List<FiiModel> fiis = fiiRepository.findByContribuinteId(contribuinte.getId());
         LinkedHashMap fiisListMap = new LinkedHashMap<>();
-        Double precoMedioCarteira = 0d, precoAtualCarteira = 0d, saldoTotalCarteira = 0d, variacaoCarteira = 0d;
-        Double precoAtual = null;
+        double precoMedioCarteira = 0d, precoAtualCarteira = 0d, saldoTotalCarteira = 0d, variacaoCarteira = 0d;
+        double precoAtual, saldoRealAplicado = 0d;
         for (int i = 0; i < fiis.size(); i++) {
             FiiModel fiiModel = fiis.get(i);
 
             AtivoDTO fiiAtual = ativoService.buscarAtivo(fiiModel.getSigla().toUpperCase());
 
-            Double precoMedio = fiiModel.getTotalValor() / fiiModel.getCotas();
-            Double saldoTotal = fiiModel.getCotas() * fiiAtual.getPrecoAtual();
+            double precoMedio = fiiModel.getTotalValor() / fiiModel.getCotas();
+            double saldoTotal = fiiModel.getCotas() * fiiAtual.getPrecoAtual();
             precoAtual = fiiAtual.getPrecoAtual();
-            Double variacao = ((precoAtual - precoMedio) / precoMedio) * 100;
+            double variacao = ((precoAtual - precoMedio) / precoMedio) * 100;
 
             precoMedioCarteira += precoMedio;
             saldoTotalCarteira += saldoTotal;
             precoAtualCarteira += precoAtual;
-
+            saldoRealAplicado += fiiModel.getTotalValor();
             LinkedHashMap<String, Object> fiiMap = new LinkedHashMap<>();
 
             fiiMap.put("Cotas", fiiModel.getCotas());
-            fiiMap.put("Preço médio", precoMedio);
-            fiiMap.put("Saldo total", saldoTotal);
-
+            fiiMap.put("Preço médio", formatNumber(precoMedio));
+            fiiMap.put("Preço atual", formatNumber(precoAtual));
+            fiiMap.put("Saldo total", formatNumber(saldoTotal));
+            fiiMap.put("Variação", formatNumber(variacao));
             fiisListMap.put(fiiModel.getSigla(), fiiMap);
+
         }
+
         variacaoCarteira = ((precoAtualCarteira - precoMedioCarteira) / precoMedioCarteira) * 100;
-        fiisListMap.put("Variação total", variacaoCarteira);
-        fiisListMap.put("Preço médio total", precoMedioCarteira);
-        fiisListMap.put("Saldo total carteira", saldoTotalCarteira);
+        fiisListMap.put("Variação total", formatNumber(variacaoCarteira));
+        fiisListMap.put("Preço médio total", formatNumber(precoMedioCarteira));
+        fiisListMap.put("Saldo total carteira", formatNumber(saldoTotalCarteira));
+        fiisListMap.put("Saldo real aplicado", formatNumber(saldoRealAplicado));
         return fiisListMap;
+
     }
 }

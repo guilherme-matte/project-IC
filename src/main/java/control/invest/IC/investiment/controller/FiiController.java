@@ -7,7 +7,7 @@ import control.invest.IC.investiment.DTO.TransacaoDTO;
 import control.invest.IC.investiment.model.FiiModel;
 import control.invest.IC.investiment.repository.FiiRepository;
 import control.invest.IC.investiment.service.AtivoService;
-import control.invest.IC.investiment.service.CalculoAtivoService;
+import control.invest.IC.investiment.service.CalculoFiiService;
 import control.invest.IC.irfp.models.ContribuinteModel;
 import control.invest.IC.irfp.repositories.ContribuinteRepository;
 import control.invest.IC.response.Response;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -31,7 +30,7 @@ public class FiiController {
     @Autowired
     private Response response;
     @Autowired
-    private CalculoAtivoService calculoService;
+    private CalculoFiiService calculoService;
 
     @GetMapping("/fii/{siglaFii}")
     public ResponseEntity<ApiResponseDTO> retornarFii(@PathVariable String siglaFii) {
