@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -140,11 +141,31 @@ public class FiiController {
     @GetMapping("/calcular-fii/{siglaFii}/{cpfContribuinte}")
     public ResponseEntity<ApiResponseDTO> calcularFii(@PathVariable String cpfContribuinte, @PathVariable String siglaFii) {
         ContribuinteModel contribuinte = contribuinteRepository.findByCpf(cpfContribuinte);
+
         if (contribuinte == null) {
             return response.response(null, "Contribuinte não encontrado", 404);
         }
         Optional<FiiModel> fii = fiiRepository.findBySiglaAndContribuinteId(siglaFii.toUpperCase(), contribuinte.getId());
 
+
         return calculoService.calcularFii(fii.get(), cpfContribuinte);
+
+    }
+
+
+    @GetMapping("/calculo-total-fiis/{cpfContribuinte}")
+
+    public ResponseEntity<ApiResponseDTO> calcularCarteiraFii(@PathVariable String cpfContribuinte) {
+
+        ContribuinteModel contribuinte = contribuinteRepository.findByCpf(cpfContribuinte);
+
+        if (contribuinte == null) {
+
+            return response.response(null, "Contribuinte não encontrado", 404);
+
+        }
+
+        return response.response(calculoService.calcularCarteiraFii(contribuinte), "Calculo realizado com sucesso!", 200);
+
     }
 }
