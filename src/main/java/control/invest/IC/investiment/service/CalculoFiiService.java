@@ -80,10 +80,10 @@ public class CalculoFiiService {
             FiiModel fiiModel = fiis.get(i);
 
             AtivoDTO fiiAtual = ativoService.buscarAtivo(fiiModel.getSigla().toUpperCase());
+            precoAtual = fiiAtual.getPrecoAtual();
 
             double precoMedio = fiiModel.getTotalValor() / fiiModel.getCotas();
-            double saldoTotal = fiiModel.getCotas() * fiiAtual.getPrecoAtual();
-            precoAtual = fiiAtual.getPrecoAtual();
+            double saldoTotal = fiiModel.getCotas() * precoAtual;
             double variacao = ((precoAtual - precoMedio) / precoMedio) * 100;
 
             precoMedioCarteira += precoMedio;
@@ -103,9 +103,10 @@ public class CalculoFiiService {
 
         variacaoCarteira = ((saldoTotalCarteira - saldoRealAplicado) / saldoRealAplicado) * 100;
         fiisListMap.put("Variação total", formatNumber(variacaoCarteira));
-        fiisListMap.put("Saldo total carteira", formatNumber(saldoTotalCarteira));
+        fiisListMap.put("Saldo atual carteira", formatNumber(saldoTotalCarteira));
         fiisListMap.put("Saldo real aplicado", formatNumber(saldoRealAplicado));
         return fiisListMap;
 
     }
+
 }

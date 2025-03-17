@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.DecimalFormat;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Optional;
 
 public class CalculoAcaoService {
@@ -45,4 +46,37 @@ public class CalculoAcaoService {
 
         return acaoMap;
     }
+
+    public LinkedHashMap<String, Object> calcularCarteiraStock(ContribuinteModel contribuinte) {
+        List<AcaoModel> stocks = acaoRepository.findByContribuinteId(contribuinte.getId());
+        double precoMedioCarteira = 0d, precoAtualCarteira = 0d, saldoTotalCarteira = 0d, variacaoCarteira = 0d;
+        double saldoRealAplicado = 0d;
+        LinkedHashMap<String, Object> stockList = new LinkedHashMap<>();
+        for (int i = 0; i < stocks.size(); i++) {
+            AcaoModel acao = stocks.get(i);
+            AtivoDTO ativoAtual = ativoService.buscarAtivo(acao.getSigla());
+            double precoAtual = ativoAtual.getPrecoAtual();
+            double precoMedio = acao.getTotalValor() / acao.getCotas();
+            double saldoTotal = acao.getCotas() * ativoAtual.getPrecoAtual();
+            double variacao = ((precoAtual - precoMedio) / precoMedio) * 100;
+            precoAtualCarteira += precoAtual;
+            precoMedioCarteira += precoMedio;
+            precoAtualCarteira += acao.getTotalValor();
+
+            LinkedHashMap<String, Object> stockMap = new LinkedHashMap<>();
+            stockMap.put("Cotas", acao.getCotas());
+            stockMap.put("Preço médio", formatNumber(precoMedio));
+            stockMap.put("Preço atual", formatNumber(precoAtual));
+            stockMap.put("Saldo total", formatNumber(saldoTotal));
+            stockMap.put("Variação", formatNumber(variacao));
+            stockList.put(acao.getSigla(), stockMap);
+        }
+
+        variacaoCarteira = ((saldoTotalCarteira - saldoRealAplicado) / saldoRealAplicado) * 100;
+        stockList.put("Variação total", formatNumber(variacaoCarteira));
+        stockList.put("Saldo atual carteira", formatNumber(saldoTotalCarteira));
+        stockList.put("Saldo real aplicado", formatNumber(saldoRealAplicado));
+        return stockList;
+    }
+
 }
