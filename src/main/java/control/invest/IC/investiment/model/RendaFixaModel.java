@@ -5,22 +5,20 @@ import control.invest.IC.irfp.models.ContribuinteModel;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "tb_fii")
-public class
-FiiModel {
-
+@Table(name = "tb_rendaFixa")
+public class RendaFixaModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne
     @JoinColumn(name = "contribuinte_id", referencedColumnName = "id")
     @JsonBackReference
     private ContribuinteModel contribuinte;
 
-    private String sigla;
-    private int cotas;
-    private Double totalValor;
+    private String emissor;
+    private double saldo;
+    private double rendimento;
+    private double cdi;
 
     public Long getId() {
         return id;
@@ -38,27 +36,35 @@ FiiModel {
         this.contribuinte = contribuinte;
     }
 
-    public String getSigla() {
-        return sigla;
+    public String getEmissor() {
+        return emissor;
     }
 
-    public void setSigla(String sigla) {
-        this.sigla = sigla;
+    public void setEmissor(String emissor) {
+        this.emissor = emissor;
     }
 
-    public int getCotas() {
-        return cotas;
+    public double getSaldo() {
+        return saldo;
     }
 
-    public void setCotas(int cotas) {
-        this.cotas = cotas;
+    public void setSaldo(double saldo) {
+        this.saldo = saldo;
     }
 
-    public Double getTotalValor() {
-        return totalValor;
+    public double getRendimento() {
+        return rendimento;
     }
 
-    public void setTotalValor(Double totalValor) {
-        this.totalValor = totalValor;
+    public void setRendimento(double rendimento) {
+        this.rendimento = rendimento;
+    }
+
+    public double getCdi() {
+        return cdi;
+    }
+
+    public void setCdi(double cdi) {
+        this.cdi = cdi;
     }
 }
