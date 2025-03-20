@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import control.invest.IC.irfp.models.ContribuinteModel;
 import jakarta.persistence.*;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "tb_rendaFixa")
 public class RendaFixaModel {
@@ -16,9 +18,17 @@ public class RendaFixaModel {
     private ContribuinteModel contribuinte;
 
     private String emissor;
+
     private double saldo;
+
     private double rendimento;
+    
     private double cdi;
+
+    private Date data;
+
+    private double imposto;
+
 
     public Long getId() {
         return id;
@@ -42,6 +52,22 @@ public class RendaFixaModel {
 
     public void setEmissor(String emissor) {
         this.emissor = emissor;
+    }
+
+    public Date getData() {
+        return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
+    }
+
+    public double getImposto() {
+        return imposto;
+    }
+
+    public void setImposto(double imposto) {
+        this.imposto = imposto;
     }
 
     public double getSaldo() {
