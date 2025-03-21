@@ -12,5 +12,5 @@ public interface RendaFixaRepository extends JpaRepository<RendaFixaModel, Long>
 
     List<RendaFixaModel> findByContribuinteId(Long contribuinteId);
 
-    RendaFixaModel findByContribuinteIdAndRendaFixaId(Long contribuinteId, Long RendaFixaId);
+    RendaFixaModel findByContribuinteIdAndId(Long contribuinteId, Long id);
 }
