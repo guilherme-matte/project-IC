@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RendaFixaService {
@@ -62,5 +63,13 @@ public class RendaFixaService {
 
         }
         return rendaFixaMap;
+    }
+
+    public RendaFixaModel getRendaFixaById(Long contribuinteId, Long rendafixaId) {
+        Optional<RendaFixaModel> rendaFixa = rendaFixaRepository.findById(rendafixaId);
+        if (rendaFixa.isEmpty()) {
+            return null;
+        }
+        return rendaFixa.get();
     }
 }

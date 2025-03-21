@@ -14,6 +14,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.Objects;
+import java.util.Optional;
 
 
 @EnableScheduling
@@ -62,5 +64,22 @@ public class RendaFixaController {
             return apiResponse.response(null, "CPF não encontrado", 404);
         }
         return apiResponse.response(rendaFixaService.getRendaFixa(contribuinte), "Lista gerada com sucesso", 200);
+    }
+
+    @GetMapping("/renda-fixa/{cpfContribuinte}/{rendaFixaId}")
+    public ResponseEntity<ApiResponseDTO> getRendaFixaById(@PathVariable Long rendaFixaId, @PathVariable String cpfContribuinte) {
+        Optional<RendaFixaModel> rendaFixa = rendaFixaRepository.findById(rendaFixaId);
+        if (rendaFixa.isEmpty()) {
+            return apiResponse.response(null, "Aplicação não encontrado", 404);
+        }
+        ContribuinteModel contribuinte = contribuinteRepository.findByCpf(cpfContribuinte);
+        if (contribuinte == null) {
+            return apiResponse.response(null, "Contriubinte não encontrado", 404);
+        }
+        if (!Objects.equals(contribuinte.getId(), rendaFixa.get().getContribuinte().getId())) {
+            return apiResponse.response(null, "Ativo não vinculado ao contribuinte", 404);
+        }
+        return apiResponse.response(rendaFixa, "Ativo encontrado com sucesso", 200);
+
     }
 }
