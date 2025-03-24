@@ -74,12 +74,33 @@ public class RendaFixaController {
         }
         ContribuinteModel contribuinte = contribuinteRepository.findByCpf(cpfContribuinte);
         if (contribuinte == null) {
-            return apiResponse.response(null, "Contriubinte não encontrado", 404);
+            return apiResponse.response(null, "Contribuinte não encontrado", 404);
         }
         if (!Objects.equals(contribuinte.getId(), rendaFixa.get().getContribuinte().getId())) {
             return apiResponse.response(null, "Ativo não vinculado ao contribuinte", 404);
         }
+
         return apiResponse.response(rendaFixa, "Ativo encontrado com sucesso", 200);
 
     }
+
+    @PutMapping("/put/renda-fixa/{cpfContribuinte}/rendaFixaId")
+    public ResponseEntity<ApiResponseDTO> putRendaFixa(@PathVariable String cpfContribuinte, @PathVariable Long rendaFixaId, @RequestBody RendaFixaModel rendaFixaBody) {
+        ContribuinteModel contribuinte = contribuinteRepository.findByCpf(cpfContribuinte);
+        if (contribuinte == null) {
+            return apiResponse.response(null, "CPF não encontrado", 404);
+        }
+        RendaFixaModel rendaFixa = rendaFixaRepository.findByContribuinteIdAndRendaFixaId(contribuinte.getId(), rendaFixaId);
+
+        if (rendaFixa == null) {
+            return apiResponse.response(null, "Ativo não encontrado", 404);
+        }
+
+        rendaFixa.setSaldo(rendaFixaBody.getSaldo());
+        rendaFixa.setCdi(rendaFixaBody.getCdi());
+
+        rendaFixaRepository.save(rendaFixa);
+        return apiResponse.response(rendaFixa, "Ativo alterado com sucesso", 200);
+    }
+
 }

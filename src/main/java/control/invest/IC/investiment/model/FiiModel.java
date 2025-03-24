@@ -6,8 +6,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tb_fii")
-public class
-FiiModel {
+public class FiiModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
