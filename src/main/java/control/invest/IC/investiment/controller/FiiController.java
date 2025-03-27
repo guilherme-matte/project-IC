@@ -43,7 +43,7 @@ public class FiiController {
 
     }
 
-    @PostMapping("/fii/cad/{cpfContribuinte}")
+    @PostMapping("/fii/{cpfContribuinte}")
     public ResponseEntity<ApiResponseDTO> cadFii(@PathVariable String cpfContribuinte, @RequestBody TransacaoDTO dto) {
         ContribuinteModel result = contribuinteRepository.findByCpf(cpfContribuinte);
         if (result == null) {

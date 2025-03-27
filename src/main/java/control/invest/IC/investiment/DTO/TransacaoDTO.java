@@ -5,13 +5,20 @@ public class TransacaoDTO {
     private String sigla;
     private int cotas;
     private String tipo;
-
+    private double valorCota;
     private AtivoDTO ativoDTO;
 
     public AtivoDTO getAtivoDTO() {
         return ativoDTO;
     }
 
+    public double getValorCota() {
+        return valorCota;
+    }
+
+    public void setValorCota(double valorCota) {
+        this.valorCota = valorCota;
+    }
 
     public void setAtivoDTO(AtivoDTO ativoDTO) {
         this.ativoDTO = ativoDTO;

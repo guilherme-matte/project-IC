@@ -84,13 +84,24 @@ public class RendaFixaController {
 
     }
 
-    @PutMapping("/put/renda-fixa/{cpfContribuinte}/rendaFixaId")
+    public boolean verificarIdRendaFixa_Contribuinte(ContribuinteModel contribuinte, RendaFixaModel rendaFixa) {
+        long contribuinteId = contribuinte.getId();
+        long rendaFixaId = rendaFixa.getContribuinte().getId();
+
+        if (contribuinteId != rendaFixaId) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @PutMapping("/renda-fixa/{cpfContribuinte}/{rendaFixaId}")
     public ResponseEntity<ApiResponseDTO> putRendaFixa(@PathVariable String cpfContribuinte, @PathVariable Long rendaFixaId, @RequestBody RendaFixaModel rendaFixaBody) {
         ContribuinteModel contribuinte = contribuinteRepository.findByCpf(cpfContribuinte);
         if (contribuinte == null) {
             return apiResponse.response(null, "CPF não encontrado", 404);
         }
-        RendaFixaModel rendaFixa = rendaFixaRepository.findByContribuinteIdAndRendaFixaId(contribuinte.getId(), rendaFixaId);
+        RendaFixaModel rendaFixa = rendaFixaRepository.findByContribuinteIdAndId(contribuinte.getId(), rendaFixaId);
 
         if (rendaFixa == null) {
             return apiResponse.response(null, "Ativo não encontrado", 404);
@@ -101,6 +112,25 @@ public class RendaFixaController {
 
         rendaFixaRepository.save(rendaFixa);
         return apiResponse.response(rendaFixa, "Ativo alterado com sucesso", 200);
+    }
+
+    @DeleteMapping("/renda-fixa/{cpfContribuinte}/")
+    public ResponseEntity<ApiResponseDTO> deleteRendaFixa(@PathVariable String cpfContribuinte, @PathVariable Long rendaFixaId) {
+
+        ContribuinteModel contribuinte = contribuinteRepository.findByCpf(cpfContribuinte);
+        if (contribuinte == null) {
+            return apiResponse.response(null, "CPF não encontrado", 404);
+        }
+        RendaFixaModel rendaFixa = rendaFixaRepository.findByContribuinteIdAndId(contribuinte.getId(), rendaFixaId);
+        if (rendaFixa == null) {
+            return apiResponse.response(null, "Ativo não encontrado", 404);
+        }
+
+        if (verificarIdRendaFixa_Contribuinte(contribuinte, rendaFixa)) {
+            return apiResponse.response(null, "Ativo não vinculado ao contribuinte", 404);
+        }
+        rendaFixaRepository.delete(rendaFixa);
+        return apiResponse.response(null, "Ativo deletado com sucesso", 200);
     }
 
 }
