@@ -1,6 +1,7 @@
 package control.invest.IC.investiment.controller;
 
 import control.invest.IC.authentication.service.ApiResponseDTO;
+import control.invest.IC.investiment.DTO.SimularRendaFixaDTO;
 import control.invest.IC.investiment.model.RendaFixaModel;
 import control.invest.IC.investiment.repository.RendaFixaRepository;
 import control.invest.IC.investiment.service.RendaFixaService;
@@ -13,7 +14,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -133,4 +133,13 @@ public class RendaFixaController {
         return apiResponse.response(null, "Ativo deletado com sucesso", 200);
     }
 
+    @GetMapping("/simular-renda-fixa")
+    public ResponseEntity<ApiResponseDTO> getSimularRendaFixa(@RequestBody SimularRendaFixaDTO dto) {
+
+        if (dto == null) {
+            return apiResponse.response(null, "Objeto não encontrado(Formulário está vazio)", 404);
+        }
+        return apiResponse.response(rendaFixaService.simularRendaFixa(dto), "Calculo realizado com sucesso", 202);
+
+    }
 }

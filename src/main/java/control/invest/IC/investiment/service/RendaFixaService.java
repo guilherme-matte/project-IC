@@ -1,6 +1,6 @@
 package control.invest.IC.investiment.service;
 
-import control.invest.IC.investiment.model.AcaoModel;
+import control.invest.IC.investiment.DTO.SimularRendaFixaDTO;
 import control.invest.IC.investiment.model.RendaFixaModel;
 import control.invest.IC.investiment.repository.RendaFixaRepository;
 import control.invest.IC.irfp.models.ContribuinteModel;
@@ -8,8 +8,6 @@ import control.invest.IC.irfp.repositories.ContribuinteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.*;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -71,5 +69,25 @@ public class RendaFixaService {
             return null;
         }
         return rendaFixa.get();
+
     }
+
+    public LinkedHashMap<String, Object> simularRendaFixa(SimularRendaFixaDTO dto) {
+
+        double selic = (15.5 * (dto.getCdi() / 100));
+        double rendimento = 0d;
+
+        for (int i = 0; i < dto.getMeses(); i++) {
+            rendimento = dto.getSaldo() * selic;
+            dto.setSaldo(dto.getSaldo() + rendimento);
+
+        }
+        LinkedHashMap<String, Object> simulado = new LinkedHashMap<>();
+        simulado.put("Rendimento total", rendimento);
+        simulado.put("Saldo", dto.getSaldo());
+        simulado.put("Meses", dto.getMeses());
+        return simulado;
+
+    }
+
 }
